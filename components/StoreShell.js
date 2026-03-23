@@ -1,10 +1,30 @@
 "use client";
 import { CartProvider, useCart } from "@/lib/cart";
+import { getThemeById } from "@/lib/themes";
 import Link from "next/link";
 import { useState } from "react";
 
 function formatPrice(p) {
   return new Intl.NumberFormat("tr-TR").format(p);
+}
+
+function ThemeStyle({ palette }) {
+  return (
+    <style>{`
+      :root {
+        --color-brand: ${palette.brand};
+        --color-accent: ${palette.accent};
+        --color-warm: ${palette.warm};
+        --color-border: ${palette.border};
+        --color-muted: ${palette.muted};
+        --color-gold: ${palette.gold};
+      }
+      body {
+        background: ${palette.warm};
+        color: ${palette.text};
+      }
+    `}</style>
+  );
 }
 
 function Navbar({ store }) {
@@ -140,8 +160,12 @@ function CartDrawer({ store, onClose }) {
 }
 
 export default function StoreShell({ store, children }) {
+  const themeId = store.settings?.theme || "classic-warm";
+  const theme = getThemeById(themeId);
+
   return (
     <CartProvider storeSlug={store.slug}>
+      <ThemeStyle palette={theme.palette} />
       <Navbar store={store} />
       {children}
       {/* Footer */}

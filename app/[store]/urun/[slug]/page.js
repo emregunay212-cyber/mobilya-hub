@@ -2,6 +2,7 @@ import { getStore, getProduct } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 import Link from "next/link";
+import Image from "next/image";
 
 export const revalidate = 60;
 
@@ -19,6 +20,39 @@ export async function generateMetadata({ params }) {
     title: `${product.name} | ${store.name}`,
     description: product.description,
   };
+}
+
+function ProductImage({ images, name }) {
+  const src = images && images.length > 0 ? images[0] : null;
+
+  if (!src) {
+    return <span className="text-[120px]">🛋️</span>;
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={name}
+      fill
+      className="object-cover"
+      sizes="(max-width: 1024px) 100vw, 50vw"
+      priority
+    />
+  );
+}
+
+function ImageGallery({ images, name }) {
+  if (!images || images.length <= 1) return null;
+
+  return (
+    <div className="flex gap-2 mt-3">
+      {images.slice(0, 5).map((src, i) => (
+        <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[var(--color-border)]">
+          <Image src={src} alt={`${name} ${i + 1}`} fill className="object-cover" sizes="64px" />
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default async function ProductPage({ params }) {
@@ -56,18 +90,21 @@ export default async function ProductPage({ params }) {
 
       <div className="grid lg:grid-cols-2 gap-12">
         {/* Image */}
-        <div className="aspect-square rounded-3xl bg-gradient-to-br from-[var(--color-border)]/40 to-[var(--color-border)]/10 flex items-center justify-center relative">
-          <span className="text-[120px]">🛋️</span>
-          {discount > 0 && (
-            <span className="absolute top-6 right-6 bg-[var(--color-accent)] text-white text-sm font-bold px-4 py-2 rounded-xl">
-              %{discount} İndirim
-            </span>
-          )}
-          {product.badge && (
-            <span className="absolute top-6 left-6 bg-[var(--color-brand)] text-[var(--color-gold)] text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider">
-              {product.badge}
-            </span>
-          )}
+        <div>
+          <div className="aspect-square rounded-3xl bg-gradient-to-br from-[var(--color-border)]/40 to-[var(--color-border)]/10 flex items-center justify-center relative overflow-hidden">
+            <ProductImage images={product.images} name={product.name} />
+            {discount > 0 && (
+              <span className="absolute top-6 right-6 bg-[var(--color-accent)] text-white text-sm font-bold px-4 py-2 rounded-xl z-10">
+                %{discount} İndirim
+              </span>
+            )}
+            {product.badge && (
+              <span className="absolute top-6 left-6 bg-[var(--color-brand)] text-[var(--color-gold)] text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider z-10">
+                {product.badge}
+              </span>
+            )}
+          </div>
+          <ImageGallery images={product.images} name={product.name} />
         </div>
 
         {/* Details */}

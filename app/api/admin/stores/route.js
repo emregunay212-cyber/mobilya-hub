@@ -1,25 +1,39 @@
 import { getAdminClient } from "@/lib/supabase";
+import { requireAdmin, authError } from "@/lib/auth";
+import { validateStore, sanitizeString } from "@/lib/validate";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
+  const denied = requireAdmin(request);
+  if (denied) return authError(denied);
+
   const admin = getAdminClient();
   const body = await request.json();
 
-  // 1. Mağaza oluştur
+  // Validate
+  const errors = validateStore(body);
+  if (errors) {
+    return NextResponse.json({ error: errors.join(", ") }, { status: 400 });
+  }
+
+  // Sanitize
+  const storeData = {
+    name: sanitizeString(body.name, 100),
+    slug: body.slug.toLowerCase().trim(),
+    phone: sanitizeString(body.phone, 20),
+    whatsapp: body.whatsapp ? sanitizeString(body.whatsapp, 15) : null,
+    email: body.email ? sanitizeString(body.email, 100) : null,
+    address: body.address ? sanitizeString(body.address, 200) : null,
+    city: sanitizeString(body.city || "Balıkesir", 50),
+    description: body.description ? sanitizeString(body.description, 500) : null,
+    instagram: body.instagram ? sanitizeString(body.instagram, 50) : null,
+    settings: { theme: body.theme || "classic-warm" },
+  };
+
+  // 1. Create store
   const { data: store, error: storeErr } = await admin
     .from("stores")
-    .insert({
-      name: body.name,
-      slug: body.slug,
-      phone: body.phone,
-      whatsapp: body.whatsapp || null,
-      email: body.email || null,
-      address: body.address || null,
-      city: body.city || "Balıkesir",
-      description: body.description || null,
-      instagram: body.instagram || null,
-      settings: { theme: body.theme },
-    })
+    .insert(storeData)
     .select()
     .single();
 
@@ -27,11 +41,11 @@ export async function POST(request) {
     return NextResponse.json({ error: storeErr.message }, { status: 400 });
   }
 
-  // 2. Kategorileri oluştur
+  // 2. Create categories
   if (body.categories && body.categories.length > 0) {
-    const catRows = body.categories.map((cat, i) => ({
+    const catRows = body.categories.slice(0, 20).map((cat, i) => ({
       store_id: store.id,
-      name: cat.name,
+      name: sanitizeString(cat.name, 50),
       slug: cat.slug,
       sort_order: i + 1,
     }));
@@ -45,8 +59,10 @@ export async function POST(request) {
   return NextResponse.json({ store, success: true });
 }
 
-// Mağaza listesi
-export async function GET() {
+export async function GET(request) {
+  const denied = requireAdmin(request);
+  if (denied) return authError(denied);
+
   const admin = getAdminClient();
   const { data, error } = await admin
     .from("stores")

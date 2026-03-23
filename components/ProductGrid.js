@@ -1,6 +1,7 @@
 "use client";
 import { useCart } from "@/lib/cart";
 import Link from "next/link";
+import Image from "next/image";
 
 function formatPrice(p) {
   return new Intl.NumberFormat("tr-TR").format(p);
@@ -14,9 +15,31 @@ function Badge({ text }) {
     "İndirim": "bg-[var(--color-gold)] text-[var(--color-brand)]",
   };
   return (
-    <span className={`absolute top-3 left-3 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider rounded ${colors[text] || "bg-gray-500 text-white"}`}>
+    <span className={`absolute top-3 left-3 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider rounded z-10 ${colors[text] || "bg-gray-500 text-white"}`}>
       {text}
     </span>
+  );
+}
+
+function ProductImage({ images, name }) {
+  const src = images && images.length > 0 ? images[0] : null;
+
+  if (!src) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-5xl group-hover:scale-110 transition-transform duration-500">🛋️</span>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={name}
+      fill
+      className="object-cover group-hover:scale-105 transition-transform duration-500"
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+    />
   );
 }
 
@@ -41,13 +64,11 @@ export default function ProductGrid({ products, storeSlug }) {
         >
           {/* Image Area */}
           <Link href={`/${storeSlug}/urun/${product.slug}`}>
-            <div className="relative aspect-[4/3] bg-gradient-to-br from-[var(--color-border)]/40 to-[var(--color-border)]/10 flex items-center justify-center">
+            <div className="relative aspect-[4/3] bg-gradient-to-br from-[var(--color-border)]/40 to-[var(--color-border)]/10 overflow-hidden">
               <Badge text={product.badge} />
-              <span className="text-5xl group-hover:scale-110 transition-transform duration-500">
-                🛋️
-              </span>
+              <ProductImage images={product.images} name={product.name} />
               {product.old_price && (
-                <span className="absolute top-3 right-3 bg-[var(--color-accent)] text-white text-[11px] font-bold px-2 py-0.5 rounded">
+                <span className="absolute top-3 right-3 bg-[var(--color-accent)] text-white text-[11px] font-bold px-2 py-0.5 rounded z-10">
                   %{Math.round((1 - product.price / product.old_price) * 100)}
                 </span>
               )}
