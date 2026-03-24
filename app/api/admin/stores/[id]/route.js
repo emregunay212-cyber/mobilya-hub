@@ -4,7 +4,7 @@ import { sanitizeString } from "@/lib/validate";
 import { NextResponse } from "next/server";
 
 export async function PUT(request, { params }) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
   const { id } = await params;
@@ -39,7 +39,7 @@ export async function PUT(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
   const { id } = await params;
