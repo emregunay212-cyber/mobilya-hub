@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/admin/AdminShell";
 import { useParams, useRouter } from "next/navigation";
+import DomainSetup from "@/components/admin/DomainSetup";
 
 interface StoreData {
   id: string;
@@ -223,6 +224,9 @@ export default function StoreEditPage() {
           </button>
         </div>
       </div>
+
+      {/* Domain Management */}
+      <DomainSetup storeId={storeId} token={token} />
     </div>
   );
 }
