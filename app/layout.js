@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Mobilya Hub",
-  description: "Balıkesir mobilya mağazaları",
+  title: "WebKoda - Web Sitesi Üretim Platformu",
+  description: "İşletmeniz için profesyonel web sitesi oluşturun",
 };
 
 export default function RootLayout({ children }) {

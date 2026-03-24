@@ -10,6 +10,55 @@ function formatPrice(p) {
   return new Intl.NumberFormat("tr-TR").format(p);
 }
 
+// Sektöre göre emoji ve trust bar
+const SECTOR_CONFIG = {
+  mobilyaci: {
+    emoji: "🛋️",
+    features: [
+      ["🚚", "Ücretsiz Kargo"],
+      ["🔧", "Ücretsiz Montaj"],
+      ["🔄", "14 Gün İade"],
+      ["💳", "9 Taksit"],
+    ],
+    whatsappText: "WhatsApp ile Sor",
+  },
+  kuyumcu: {
+    emoji: "💎",
+    features: [
+      ["📜", "Sertifikalı"],
+      ["🚚", "Sigortalı Kargo"],
+      ["🎁", "Hediye Paketi"],
+      ["💳", "12 Taksit"],
+    ],
+    whatsappText: "WhatsApp ile Sor",
+  },
+  cafe: {
+    emoji: "☕",
+    features: [
+      ["🌿", "Taze Malzeme"],
+      ["🚴", "Hızlı Teslimat"],
+      ["🧑‍🍳", "Şef Yapımı"],
+      ["📱", "Online Sipariş"],
+    ],
+    whatsappText: "WhatsApp ile Sipariş Ver",
+  },
+  "oto-galeri": {
+    emoji: "🚗",
+    features: [
+      ["✅", "Ekspertiz Raporlu"],
+      ["📋", "Tramer Sorgusu"],
+      ["🔄", "Takas İmkanı"],
+      ["💳", "Kredi İmkanı"],
+    ],
+    whatsappText: "WhatsApp ile Bilgi Al",
+  },
+};
+
+function getSectorConfig(store) {
+  const sector = store.settings?.sector || "mobilyaci";
+  return SECTOR_CONFIG[sector] || SECTOR_CONFIG.mobilyaci;
+}
+
 export async function generateMetadata({ params }) {
   const { store: storeSlug, slug } = await params;
   const store = await getStore(storeSlug);
@@ -22,11 +71,11 @@ export async function generateMetadata({ params }) {
   };
 }
 
-function ProductImage({ images, name }) {
+function ProductImage({ images, name, emoji }) {
   const src = images && images.length > 0 ? images[0] : null;
 
   if (!src) {
-    return <span className="text-[120px]">🛋️</span>;
+    return <span className="text-[120px]">{emoji}</span>;
   }
 
   return (
@@ -62,6 +111,7 @@ export default async function ProductPage({ params }) {
   const product = await getProduct(store.id, slug);
   if (!product) notFound();
 
+  const config = getSectorConfig(store);
   const discount = product.old_price
     ? Math.round((1 - product.price / product.old_price) * 100)
     : 0;
@@ -92,7 +142,7 @@ export default async function ProductPage({ params }) {
         {/* Image */}
         <div>
           <div className="aspect-square rounded-3xl bg-gradient-to-br from-[var(--color-border)]/40 to-[var(--color-border)]/10 flex items-center justify-center relative overflow-hidden">
-            <ProductImage images={product.images} name={product.name} />
+            <ProductImage images={product.images} name={product.name} emoji={config.emoji} />
             {discount > 0 && (
               <span className="absolute top-6 right-6 bg-[var(--color-accent)] text-white text-sm font-bold px-4 py-2 rounded-xl z-10">
                 %{discount} İndirim
@@ -118,6 +168,20 @@ export default async function ProductPage({ params }) {
           <p className="text-[var(--color-muted)] leading-relaxed mb-8">
             {product.description}
           </p>
+
+          {/* Metadata - sektöre özel alanlar */}
+          {product.metadata && Object.keys(product.metadata).length > 0 && (
+            <div className="mb-6 grid grid-cols-2 gap-2">
+              {Object.entries(product.metadata).map(([key, value]) => (
+                value && (
+                  <div key={key} className="text-sm">
+                    <span className="text-[var(--color-muted)]">{key}: </span>
+                    <span className="font-semibold">{String(value)}</span>
+                  </div>
+                )
+              ))}
+            </div>
+          )}
 
           {/* Price */}
           <div className="mb-8">
@@ -148,18 +212,13 @@ export default async function ProductPage({ params }) {
               rel="noopener noreferrer"
               className="mt-3 w-full py-3.5 rounded-xl border-2 border-green-600 text-green-700 font-bold text-center text-sm hover:bg-green-50 transition-colors block"
             >
-              💬 WhatsApp ile Sor
+              💬 {config.whatsappText}
             </a>
           )}
 
-          {/* Features */}
+          {/* Features - sektöre göre */}
           <div className="mt-10 grid grid-cols-2 gap-4">
-            {[
-              ["🚚", "Ücretsiz Kargo"],
-              ["🔧", "Ücretsiz Montaj"],
-              ["🔄", "14 Gün İade"],
-              ["💳", "9 Taksit"],
-            ].map(([icon, text]) => (
+            {config.features.map(([icon, text]) => (
               <div key={text} className="flex items-center gap-2 text-sm text-[var(--color-muted)]">
                 <span>{icon}</span> {text}
               </div>
