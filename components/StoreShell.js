@@ -3,6 +3,8 @@ import { CartProvider, useCart } from "@/lib/cart";
 import { getThemeById } from "@/lib/themes";
 import Link from "next/link";
 import { useState } from "react";
+import StoreFooter from "./StoreFooter";
+import WhatsAppFAB from "./WhatsAppFAB";
 
 function formatPrice(p) {
   return new Intl.NumberFormat("tr-TR").format(p);
@@ -159,7 +161,7 @@ function CartDrawer({ store, onClose }) {
   );
 }
 
-export default function StoreShell({ store, children }) {
+export default function StoreShell({ store, categories = [], children }) {
   const themeId = store.settings?.theme || "classic-warm";
   const theme = getThemeById(themeId);
 
@@ -168,11 +170,8 @@ export default function StoreShell({ store, children }) {
       <ThemeStyle palette={theme.palette} />
       <Navbar store={store} />
       {children}
-      {/* Footer */}
-      <footer className="border-t border-[var(--color-border)] py-8 px-4 text-center text-sm text-[var(--color-muted)]">
-        <p className="mb-1">© 2026 {store.name} — {store.city}</p>
-        <p className="text-xs opacity-60">WEBKODA tarafından geliştirildi</p>
-      </footer>
+      <WhatsAppFAB whatsapp={store.whatsapp} />
+      <StoreFooter store={store} categories={categories} />
     </CartProvider>
   );
 }

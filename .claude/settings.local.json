@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ls \"C:\\\\Users\\\\Gunay\\\\Desktop\\\\mobilya-hub\\\\.claude\\\\worktrees\\\\friendly-kalam\\\\node_modules\\\\.bin\\\\next\"*)",
+      "Bash(ls \"C:\\\\Users\\\\Gunay\\\\Desktop\\\\mobilya-hub\\\\node_modules\\\\.bin\\\\next\"*)",
+      "WebFetch(domain:restaurantguru.com)",
+      "WebFetch(domain:www.tripadvisor.com.tr)",
+      "WebFetch(domain:wanderlog.com)"
+    ]
+  }
+}

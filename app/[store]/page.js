@@ -150,7 +150,7 @@ export default async function StorePage({ params, searchParams }) {
           ))}
         </div>
 
-        <ProductGrid products={products} storeSlug={slug} productEmoji={config.emoji} />
+        <ProductGrid products={products} storeSlug={slug} productEmoji={config.emoji} whatsapp={store.whatsapp} />
       </section>
 
       {/* Trust Bar */}
