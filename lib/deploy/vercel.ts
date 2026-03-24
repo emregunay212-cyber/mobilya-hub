@@ -144,12 +144,62 @@ export async function getDeploymentStatus(
 /**
  * Add a custom domain to a Vercel project.
  */
-export async function addDomain(projectId: string, domain: string): Promise<boolean> {
+export async function addDomain(
+  projectId: string,
+  domain: string
+): Promise<{ success: boolean; error?: string }> {
   const res = await fetch(`${VERCEL_API}/v10/projects/${projectId}/domains${teamQuery()}`, {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({ name: domain }),
   });
 
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    return { success: false, error: data.error?.message || "Domain eklenemedi" };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Get domain configuration and verification status.
+ */
+export async function getDomainConfig(
+  projectId: string,
+  domain: string
+): Promise<{
+  verified: boolean;
+  configured: boolean;
+  error?: string;
+  txtVerification?: { name: string; value: string };
+}> {
+  const res = await fetch(
+    `${VERCEL_API}/v9/projects/${projectId}/domains/${domain}${teamQuery()}`,
+    { headers: getHeaders() }
+  );
+
+  if (!res.ok) {
+    return { verified: false, configured: false, error: "Domain bilgisi alınamadı" };
+  }
+
+  const data = await res.json();
+  return {
+    verified: data.verified === true,
+    configured: data.configured === true || data.verified === true,
+    txtVerification: data.verification?.[0]
+      ? { name: data.verification[0].domain, value: data.verification[0].value }
+      : undefined,
+  };
+}
+
+/**
+ * Remove a custom domain from a Vercel project.
+ */
+export async function removeDomain(projectId: string, domain: string): Promise<boolean> {
+  const res = await fetch(
+    `${VERCEL_API}/v9/projects/${projectId}/domains/${domain}${teamQuery()}`,
+    { method: "DELETE", headers: getHeaders() }
+  );
   return res.ok;
 }
