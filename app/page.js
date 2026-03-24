@@ -3,6 +3,19 @@ import Link from "next/link";
 
 export const revalidate = 60;
 
+// Sektör emoji mapping
+const SECTOR_ICONS = {
+  mobilyaci: "🛋️",
+  kuyumcu: "💎",
+  cafe: "☕",
+  "oto-galeri": "🚗",
+};
+
+function getSectorIcon(store) {
+  const sector = store.settings?.sector || "mobilyaci";
+  return SECTOR_ICONS[sector] || "🏪";
+}
+
 export default async function HomePage() {
   const { data: stores } = await supabase
     .from("stores")
@@ -16,10 +29,10 @@ export default async function HomePage() {
           WEBKODA
         </p>
         <h1 className="text-5xl font-bold tracking-tight mb-4">
-          Mobilya Hub
+          Web Sitesi Platformu
         </h1>
         <p className="text-lg text-[var(--color-muted)] mb-16 max-w-lg mx-auto">
-          Balıkesir&apos;in en iyi mobilya mağazaları tek çatı altında.
+          İşletmeler için profesyonel web siteleri tek çatı altında.
         </p>
 
         <div className="grid gap-6 sm:grid-cols-2">
@@ -29,8 +42,8 @@ export default async function HomePage() {
               href={`/${store.slug}`}
               className="card-lift block bg-white rounded-2xl border border-[var(--color-border)] p-8 text-left"
             >
-              <div className="w-14 h-14 rounded-xl bg-[var(--color-brand)] flex items-center justify-center text-2xl font-bold text-[var(--color-gold)] mb-4">
-                {store.name[0]}
+              <div className="w-14 h-14 rounded-xl bg-[var(--color-brand)] flex items-center justify-center text-2xl mb-4">
+                {getSectorIcon(store)}
               </div>
               <h2 className="text-xl font-bold mb-1">{store.name}</h2>
               <p className="text-sm text-[var(--color-muted)] mb-3 line-clamp-2">

@@ -4,12 +4,82 @@ import ProductGrid from "@/components/ProductGrid";
 
 export const revalidate = 60;
 
+// Sektör bazlı konfigürasyon
+const SECTOR_CONFIG = {
+  mobilyaci: {
+    emoji: "🛋️",
+    heroLabel: (city) => `✦ ${city}'nin Mobilya Markası`,
+    collectionTitle: "Ürünlerimiz",
+    collectionLabel: "KOLEKSİYON",
+    productUnit: "ürün",
+    ctaTitle: "Hayalinizdeki Mobilyayı Bulalım",
+    ctaDesc: "WhatsApp üzerinden 7/24 iletişime geçebilir, özel fiyat alabilirsiniz.",
+    trustBar: [
+      ["🚚", "Ücretsiz Kargo", "Tüm Türkiye"],
+      ["🔧", "Ücretsiz Montaj", "Profesyonel ekip"],
+      ["🔄", "14 Gün İade", "Koşulsuz"],
+      ["💳", "9 Taksit", "Tüm kartlara"],
+    ],
+  },
+  kuyumcu: {
+    emoji: "💎",
+    heroLabel: (city) => `✦ ${city}'nin Kuyumcusu`,
+    collectionTitle: "Koleksiyonumuz",
+    collectionLabel: "MÜCEVHERAT",
+    productUnit: "ürün",
+    ctaTitle: "Işıltınızı Tamamlayın",
+    ctaDesc: "WhatsApp üzerinden özel tasarım ve fiyat bilgisi alabilirsiniz.",
+    trustBar: [
+      ["📜", "Sertifikalı", "GIA / IGI belgeli"],
+      ["🚚", "Ücretsiz Kargo", "Sigortalı gönderim"],
+      ["🎁", "Hediye Paketi", "Özel kutulama"],
+      ["💳", "12 Taksit", "Tüm kartlara"],
+    ],
+  },
+  cafe: {
+    emoji: "☕",
+    heroLabel: (city) => `✦ ${city}'nin Lezzet Durağı`,
+    collectionTitle: "Menümüz",
+    collectionLabel: "MENÜ",
+    productUnit: "ürün",
+    ctaTitle: "Siparişinizi Verin",
+    ctaDesc: "WhatsApp üzerinden hızlıca sipariş verebilirsiniz.",
+    trustBar: [
+      ["🌿", "Taze Malzeme", "Her gün taze"],
+      ["🚴", "Hızlı Teslimat", "30 dakikada kapında"],
+      ["🧑‍🍳", "Şef Yapımı", "Profesyonel mutfak"],
+      ["📱", "Online Sipariş", "Kolay ve hızlı"],
+    ],
+  },
+  "oto-galeri": {
+    emoji: "🚗",
+    heroLabel: (city) => `✦ ${city}'nin Güvenilir Galerisi`,
+    collectionTitle: "Araçlarımız",
+    collectionLabel: "STOK",
+    productUnit: "araç",
+    ctaTitle: "Hayalinizdeki Araç Burada",
+    ctaDesc: "WhatsApp üzerinden detaylı bilgi ve randevu alabilirsiniz.",
+    trustBar: [
+      ["✅", "Ekspertiz Raporlu", "Detaylı kontrol"],
+      ["📋", "Tramer Sorgusu", "Şeffaf geçmiş"],
+      ["🔄", "Takas İmkanı", "Aracınızı değerlendirin"],
+      ["💳", "Kredi İmkanı", "Uygun faiz oranları"],
+    ],
+  },
+};
+
+function getSectorConfig(store) {
+  const sector = store.settings?.sector || "mobilyaci";
+  return SECTOR_CONFIG[sector] || SECTOR_CONFIG.mobilyaci;
+}
+
 export default async function StorePage({ params, searchParams }) {
   const { store: slug } = await params;
   const sp = await searchParams;
   const store = await getStore(slug);
   if (!store) notFound();
 
+  const config = getSectorConfig(store);
   const categories = await getCategories(store.id);
   const categoryFilter = sp?.kategori || null;
   const products = await getProducts(store.id, categoryFilter);
@@ -21,7 +91,7 @@ export default async function StorePage({ params, searchParams }) {
         <div className="max-w-6xl mx-auto px-4 py-16 sm:py-24">
           <div className="max-w-2xl">
             <p className="text-xs font-bold tracking-[0.3em] uppercase text-[var(--color-accent)] mb-3">
-              ✦ {store.city}&apos;nin Mobilya Markası
+              {config.heroLabel(store.city)}
             </p>
             <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-[1.1] mb-4">
               {store.name}
@@ -47,10 +117,10 @@ export default async function StorePage({ params, searchParams }) {
       <section className="max-w-6xl mx-auto px-4 py-12">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <p className="text-xs font-bold tracking-[0.25em] uppercase text-[var(--color-accent)] mb-1">KOLEKSİYON</p>
-            <h2 className="text-3xl font-bold tracking-tight">Ürünlerimiz</h2>
+            <p className="text-xs font-bold tracking-[0.25em] uppercase text-[var(--color-accent)] mb-1">{config.collectionLabel}</p>
+            <h2 className="text-3xl font-bold tracking-tight">{config.collectionTitle}</h2>
           </div>
-          <p className="text-sm text-[var(--color-muted)]">{products.length} ürün</p>
+          <p className="text-sm text-[var(--color-muted)]">{products.length} {config.productUnit}</p>
         </div>
 
         {/* Category Filter */}
@@ -80,18 +150,13 @@ export default async function StorePage({ params, searchParams }) {
           ))}
         </div>
 
-        <ProductGrid products={products} storeSlug={slug} />
+        <ProductGrid products={products} storeSlug={slug} productEmoji={config.emoji} />
       </section>
 
       {/* Trust Bar */}
       <section className="bg-[var(--color-brand)] text-white">
         <div className="max-w-6xl mx-auto px-4 py-10 flex flex-wrap justify-around gap-8 text-center">
-          {[
-            ["🚚", "Ücretsiz Kargo", "Tüm Türkiye"],
-            ["🔧", "Ücretsiz Montaj", "Profesyonel ekip"],
-            ["🔄", "14 Gün İade", "Koşulsuz"],
-            ["💳", "9 Taksit", "Tüm kartlara"],
-          ].map(([icon, title, sub]) => (
+          {config.trustBar.map(([icon, title, sub]) => (
             <div key={title}>
               <p className="text-2xl mb-1">{icon}</p>
               <p className="font-bold text-sm">{title}</p>
@@ -104,9 +169,9 @@ export default async function StorePage({ params, searchParams }) {
       {/* WhatsApp CTA */}
       {store.whatsapp && (
         <section className="py-16 px-4 text-center">
-          <h2 className="text-2xl font-bold mb-3">Hayalinizdeki Mobilyayı Bulalım</h2>
+          <h2 className="text-2xl font-bold mb-3">{config.ctaTitle}</h2>
           <p className="text-[var(--color-muted)] mb-6 max-w-md mx-auto">
-            WhatsApp üzerinden 7/24 iletişime geçebilir, özel fiyat alabilirsiniz.
+            {config.ctaDesc}
           </p>
           <a
             href={`https://wa.me/${store.whatsapp}`}

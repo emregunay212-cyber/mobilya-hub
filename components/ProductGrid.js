@@ -21,13 +21,13 @@ function Badge({ text }) {
   );
 }
 
-function ProductImage({ images, name }) {
+function ProductImage({ images, name, emoji = "🛋️" }) {
   const src = images && images.length > 0 ? images[0] : null;
 
   if (!src) {
     return (
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-5xl group-hover:scale-110 transition-transform duration-500">🛋️</span>
+        <span className="text-5xl group-hover:scale-110 transition-transform duration-500">{emoji}</span>
       </div>
     );
   }
@@ -43,7 +43,7 @@ function ProductImage({ images, name }) {
   );
 }
 
-export default function ProductGrid({ products, storeSlug }) {
+export default function ProductGrid({ products, storeSlug, productEmoji = "🛋️" }) {
   const { addItem } = useCart();
 
   if (products.length === 0) {
@@ -66,7 +66,7 @@ export default function ProductGrid({ products, storeSlug }) {
           <Link href={`/${storeSlug}/urun/${product.slug}`}>
             <div className="relative aspect-[4/3] bg-gradient-to-br from-[var(--color-border)]/40 to-[var(--color-border)]/10 overflow-hidden">
               <Badge text={product.badge} />
-              <ProductImage images={product.images} name={product.name} />
+              <ProductImage images={product.images} name={product.name} emoji={productEmoji} />
               {product.old_price && (
                 <span className="absolute top-3 right-3 bg-[var(--color-accent)] text-white text-[11px] font-bold px-2 py-0.5 rounded z-10">
                   %{Math.round((1 - product.price / product.old_price) * 100)}
