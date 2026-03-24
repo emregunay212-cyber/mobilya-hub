@@ -4,7 +4,7 @@ import { validateStore, sanitizeString } from "@/lib/validate";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
   const admin = getAdminClient();
@@ -27,7 +27,9 @@ export async function POST(request) {
     city: sanitizeString(body.city || "Balıkesir", 50),
     description: body.description ? sanitizeString(body.description, 500) : null,
     instagram: body.instagram ? sanitizeString(body.instagram, 50) : null,
-    settings: { theme: body.theme || "classic-warm" },
+    settings: { theme: body.theme || "classic-warm", sector: body.sector || "mobilyaci" },
+    sector_id: body.sector_id || null,
+    payment_enabled: body.payment_enabled || false,
   };
 
   // 1. Create store
@@ -60,7 +62,7 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
   const admin = getAdminClient();

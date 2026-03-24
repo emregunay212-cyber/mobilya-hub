@@ -4,7 +4,7 @@ import { validateProduct, sanitizeString } from "@/lib/validate";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
   const admin = getAdminClient();
@@ -41,7 +41,7 @@ export async function POST(request) {
 }
 
 export async function PUT(request) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
   const admin = getAdminClient();
@@ -76,7 +76,7 @@ export async function PUT(request) {
 }
 
 export async function GET(request) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
   const admin = getAdminClient();
@@ -92,7 +92,7 @@ export async function GET(request) {
 }
 
 export async function DELETE(request) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
   const admin = getAdminClient();
