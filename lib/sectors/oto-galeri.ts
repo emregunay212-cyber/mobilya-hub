@@ -12,7 +12,7 @@ export const otoGaleri: SectorDefinition = {
     { name: "Ticari Araç", slug: "ticari-arac", icon: "🚐" },
     { name: "Motosiklet", slug: "motosiklet", icon: "🏍️" },
   ],
-  compatibleThemes: ["modern-minimal", "navy-gold", "auto-dark"],
+  compatibleThemes: ["modern-minimal", "navy-gold", "auto-dark", "midnight-luxe", "slate-corporate", "cherry-bold"],
   defaultTheme: "modern-minimal",
   heroTemplate: "split",
   trustBarItems: [

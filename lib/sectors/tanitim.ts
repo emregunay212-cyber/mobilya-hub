@@ -12,7 +12,7 @@ export const tanitim: SectorDefinition = {
     { name: "Referanslarımız", slug: "referanslarimiz", icon: "🤝" },
     { name: "İletişim", slug: "iletisim", icon: "📞" },
   ],
-  compatibleThemes: ["modern-minimal", "navy-gold", "classic-warm", "cream-elegant", "business-blue"],
+  compatibleThemes: ["modern-minimal", "navy-gold", "classic-warm", "cream-elegant", "business-blue", "ocean-breeze", "slate-corporate", "emerald-fresh", "honey-warm"],
   defaultTheme: "business-blue",
   heroTemplate: "standard",
   trustBarItems: [

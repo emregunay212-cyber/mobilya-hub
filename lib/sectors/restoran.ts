@@ -13,7 +13,7 @@ export const restoran: SectorDefinition = {
     { name: "İçecekler", slug: "icecekler", icon: "🥤" },
     { name: "Kahvaltı", slug: "kahvalti", icon: "🍳" },
   ],
-  compatibleThemes: ["classic-warm", "cafe-cozy", "modern-minimal", "forest-natural", "cream-elegant"],
+  compatibleThemes: ["classic-warm", "cafe-cozy", "modern-minimal", "forest-natural", "cream-elegant", "sunset-terracotta", "emerald-fresh", "cherry-bold", "honey-warm"],
   defaultTheme: "cafe-cozy",
   heroTemplate: "carousel",
   trustBarItems: [

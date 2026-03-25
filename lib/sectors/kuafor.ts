@@ -13,7 +13,7 @@ export const kuafor: SectorDefinition = {
     { name: "Makyaj", slug: "makyaj", icon: "💄" },
     { name: "Epilasyon", slug: "epilasyon", icon: "🌟" },
   ],
-  compatibleThemes: ["cream-elegant", "modern-minimal", "classic-warm", "salon-chic"],
+  compatibleThemes: ["cream-elegant", "modern-minimal", "classic-warm", "salon-chic", "sunset-terracotta", "ocean-breeze", "midnight-luxe", "rose-garden", "emerald-fresh", "honey-warm"],
   defaultTheme: "salon-chic",
   heroTemplate: "standard",
   trustBarItems: [
