@@ -1,4 +1,4 @@
-import { getStore, getProduct, getRelatedProducts } from "@/lib/supabase";
+import { getStore, getProduct, getRelatedProducts, getProductReviews } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductGallery from "@/components/ProductGallery";
@@ -147,13 +147,14 @@ export default async function ProductPage({ params }) {
     ? Math.round((1 - product.price / product.old_price) * 100)
     : 0;
 
-  // Related products
-  const relatedProducts = await getRelatedProducts(
-    store.id,
-    product.category_id,
-    product.id,
-    4
-  );
+  // Related products & reviews
+  const [relatedProducts, reviews] = await Promise.all([
+    getRelatedProducts(store.id, product.category_id, product.id, 4),
+    getProductReviews(product.id),
+  ]);
+  const avgRating = reviews.length > 0
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    : null;
 
   const breadcrumbItems = [
     { name: store.name, url: `${baseUrl}/${storeSlug}` },
@@ -261,6 +262,36 @@ export default async function ProductPage({ params }) {
         metadata={product.metadata || {}}
         sectorFeatures={config.features}
       />
+
+      {/* Reviews */}
+      {reviews.length > 0 && (
+        <section className="mt-16">
+          <div className="flex items-center gap-3 mb-6">
+            <h2 className="text-2xl font-bold">Degerlendirmeler</h2>
+            <span className="text-sm px-3 py-1 rounded-full" style={{ background: "var(--color-accent)", color: "#fff" }}>
+              {avgRating} / 5 ({reviews.length} yorum)
+            </span>
+          </div>
+          <div className="space-y-4">
+            {reviews.map((review, idx) => (
+              <div key={idx} className="p-4 rounded-xl" style={{ border: "1px solid var(--color-border)" }}>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex gap-0.5">
+                    {[1,2,3,4,5].map(s => (
+                      <span key={s} style={{ color: s <= review.rating ? "#F59E0B" : "#D1D5DB" }}>★</span>
+                    ))}
+                  </div>
+                  <span className="font-semibold text-sm">{review.customer_name}</span>
+                  <span className="text-xs" style={{ color: "var(--color-muted)" }}>
+                    {new Date(review.created_at).toLocaleDateString("tr-TR")}
+                  </span>
+                </div>
+                <p className="text-sm" style={{ color: "var(--color-muted)" }}>{review.comment}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
