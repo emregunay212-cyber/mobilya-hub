@@ -3,6 +3,23 @@ import { requireAdmin, authError } from "@/lib/auth";
 import { sanitizeString } from "@/lib/validate";
 import { NextResponse } from "next/server";
 
+export async function GET(request, { params }) {
+  const denied = await requireAdmin(request);
+  if (denied) return authError(denied);
+
+  const { id } = await params;
+  const admin = getAdminClient();
+
+  const { data, error } = await admin
+    .from("stores")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) return NextResponse.json({ error: "Store not found" }, { status: 404 });
+  return NextResponse.json({ store: data });
+}
+
 export async function PUT(request, { params }) {
   const denied = await requireAdmin(request);
   if (denied) return authError(denied);
