@@ -5,6 +5,7 @@ export const mobilyaci: SectorDefinition = {
   name: "Mobilyacı",
   icon: "🛋️",
   description: "Mobilya mağazaları için profesyonel web sitesi",
+  siteType: "ecommerce",
   defaultCategories: [
     { name: "Koltuk Takımları", slug: "koltuk-takimlari", icon: "🛋️" },
     { name: "Yatak Odası", slug: "yatak-odasi", icon: "🛏️" },

@@ -5,6 +5,7 @@ export const otoGaleri: SectorDefinition = {
   name: "Oto Galeri",
   icon: "🚗",
   description: "Oto galeri ve araç satış siteleri için web sitesi",
+  siteType: "ecommerce",
   defaultCategories: [
     { name: "Otomobil", slug: "otomobil", icon: "🚗" },
     { name: "SUV", slug: "suv", icon: "🚙" },

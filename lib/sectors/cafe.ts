@@ -5,6 +5,7 @@ export const cafe: SectorDefinition = {
   name: "Cafe & Restoran",
   icon: "☕",
   description: "Cafe, restoran ve yeme-içme mekanları için web sitesi",
+  siteType: "ecommerce",
   defaultCategories: [
     { name: "Sıcak İçecekler", slug: "sicak-icecekler", icon: "☕" },
     { name: "Soğuk İçecekler", slug: "soguk-icecekler", icon: "🧊" },
