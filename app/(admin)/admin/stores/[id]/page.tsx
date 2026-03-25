@@ -5,6 +5,12 @@ import { useAuth } from "@/components/admin/AdminShell";
 import { useParams, useRouter } from "next/navigation";
 import DomainSetup from "@/components/admin/DomainSetup";
 
+interface TrustItem {
+  icon: string;
+  title: string;
+  subtitle: string;
+}
+
 interface StoreData {
   id: string;
   name: string;
@@ -225,8 +231,135 @@ export default function StoreEditPage() {
         </div>
       </div>
 
+      {/* Trust Bar Editor */}
+      <TrustBarEditor
+        items={((store.settings as Record<string, unknown>)?.trustBar as TrustItem[]) || []}
+        onChange={(items) => {
+          const settings = { ...((store.settings as Record<string, unknown>) || {}), trustBar: items };
+          setStore({ ...store, settings });
+        }}
+      />
+
       {/* Domain Management */}
       <DomainSetup storeId={storeId} token={token} />
+    </div>
+  );
+}
+
+function TrustBarEditor({ items, onChange }: { items: TrustItem[]; onChange: (items: TrustItem[]) => void }) {
+  const [newIcon, setNewIcon] = useState("");
+  const [newTitle, setNewTitle] = useState("");
+  const [newSubtitle, setNewSubtitle] = useState("");
+
+  function addItem() {
+    if (!newTitle.trim()) return;
+    onChange([...items, { icon: newIcon || "✅", title: newTitle.trim(), subtitle: newSubtitle.trim() }]);
+    setNewIcon("");
+    setNewTitle("");
+    setNewSubtitle("");
+  }
+
+  function removeItem(index: number) {
+    onChange(items.filter((_, i) => i !== index));
+  }
+
+  function updateItem(index: number, field: keyof TrustItem, value: string) {
+    const updated = items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
+    onChange(updated);
+  }
+
+  return (
+    <div className="mt-6 rounded-xl border p-6" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: "#E5E7EB" }}>
+        Guven Cubugu (Trust Bar)
+      </h3>
+      <p className="text-xs mb-4" style={{ color: "#9CA3AF" }}>
+        Sitenizdeki avantaj ikonlarini duzenleyin. Bos birakirsaniz sektor varsayilani kullanilir.
+      </p>
+
+      {/* Existing items */}
+      <div className="space-y-2 mb-4">
+        {items.map((item, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-2 p-2.5 rounded-lg"
+            style={{ background: "#0F1117" }}
+          >
+            <input
+              type="text"
+              value={item.icon}
+              onChange={(e) => updateItem(i, "icon", e.target.value)}
+              className="w-10 text-center px-1 py-1 rounded border text-sm outline-none"
+              style={{ background: "#1A1D27", borderColor: "#2A2D37", color: "#E5E7EB" }}
+              placeholder="🚚"
+            />
+            <input
+              type="text"
+              value={item.title}
+              onChange={(e) => updateItem(i, "title", e.target.value)}
+              className="flex-1 px-2 py-1 rounded border text-sm outline-none"
+              style={{ background: "#1A1D27", borderColor: "#2A2D37", color: "#E5E7EB" }}
+              placeholder="Baslik"
+            />
+            <input
+              type="text"
+              value={item.subtitle}
+              onChange={(e) => updateItem(i, "subtitle", e.target.value)}
+              className="flex-1 px-2 py-1 rounded border text-sm outline-none"
+              style={{ background: "#1A1D27", borderColor: "#2A2D37", color: "#E5E7EB" }}
+              placeholder="Alt baslik"
+            />
+            <button
+              onClick={() => removeItem(i)}
+              className="text-xs px-2 py-1 rounded flex-shrink-0"
+              style={{ color: "#EF4444" }}
+            >
+              Kaldir
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Add new */}
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={newIcon}
+          onChange={(e) => setNewIcon(e.target.value)}
+          className="w-10 text-center px-1 py-1.5 rounded border text-sm outline-none"
+          style={{ background: "#0F1117", borderColor: "#2A2D37", color: "#E5E7EB" }}
+          placeholder="🚚"
+        />
+        <input
+          type="text"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          className="flex-1 px-2 py-1.5 rounded border text-sm outline-none"
+          style={{ background: "#0F1117", borderColor: "#2A2D37", color: "#E5E7EB" }}
+          placeholder="Baslik (ornek: Ucretsiz Kargo)"
+        />
+        <input
+          type="text"
+          value={newSubtitle}
+          onChange={(e) => setNewSubtitle(e.target.value)}
+          className="flex-1 px-2 py-1.5 rounded border text-sm outline-none"
+          style={{ background: "#0F1117", borderColor: "#2A2D37", color: "#E5E7EB" }}
+          placeholder="Alt baslik"
+        />
+        <button
+          onClick={addItem}
+          className="px-3 py-1.5 rounded text-sm font-medium text-white flex-shrink-0"
+          style={{ background: "#6366F1" }}
+        >
+          Ekle
+        </button>
+      </div>
+
+      {items.length === 0 && (
+        <p className="text-xs mt-3" style={{ color: "#6B7280" }}>
+          Henuz oge eklenmedi. Sektor varsayilani kullanilacak.
+        </p>
+      )}
     </div>
   );
 }

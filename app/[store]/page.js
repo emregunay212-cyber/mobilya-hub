@@ -216,13 +216,16 @@ export default async function StorePage({ params, searchParams }) {
       {/* Trust Bar */}
       <section className="bg-[var(--color-brand)] text-white">
         <div className="max-w-6xl mx-auto px-4 py-10 flex flex-wrap justify-around gap-8 text-center">
-          {config.trustBar.map(([icon, title, sub]) => (
-            <div key={title}>
-              <p className="text-2xl mb-1">{icon}</p>
-              <p className="font-bold text-sm">{title}</p>
-              <p className="text-xs text-white/60">{sub}</p>
-            </div>
-          ))}
+          {(store.settings?.trustBar || config.trustBar).map((item) => {
+            const [icon, title, sub] = Array.isArray(item) ? item : [item.icon, item.title, item.subtitle];
+            return (
+              <div key={title}>
+                <p className="text-2xl mb-1">{icon}</p>
+                <p className="font-bold text-sm">{title}</p>
+                <p className="text-xs text-white/60">{sub}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
