@@ -1,6 +1,7 @@
 "use client";
 
 import { getThemesBySector } from "@/lib/themes";
+import ThemePreview from "./ThemePreview";
 import type { WizardData } from "./index";
 
 interface Props {
@@ -26,52 +27,78 @@ export default function ThemeStep({ data, update, onNext, onPrev }: Props) {
         Magazanizin gorunumunu belirleyin
       </p>
 
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        {themes.map((theme) => {
-          const selected = data.theme === theme.id;
-          return (
-            <button
-              key={theme.id}
-              onClick={() => selectTheme(theme.id)}
-              className="text-left p-4 rounded-xl border-2 transition-all"
-              style={{
-                background: selected ? "rgba(99,102,241,0.08)" : "#0F1117",
-                borderColor: selected ? "#6366F1" : "#2A2D37",
-              }}
-            >
-              {/* Color preview */}
-              <div className="flex gap-1 mb-3">
-                {theme.colors.map((c, i) => (
-                  <div
-                    key={i}
-                    className="w-6 h-6 rounded-full"
-                    style={{ background: c }}
-                  />
-                ))}
-              </div>
+      <div className="flex gap-6">
+        {/* Theme cards */}
+        <div className="flex-1 min-w-0">
+          <div className="grid grid-cols-2 gap-3">
+            {themes.map((theme) => {
+              const selected = data.theme === theme.id;
+              return (
+                <button
+                  key={theme.id}
+                  onClick={() => selectTheme(theme.id)}
+                  className="text-left p-3 rounded-xl border-2 transition-all"
+                  style={{
+                    background: selected ? "rgba(99,102,241,0.08)" : "#0F1117",
+                    borderColor: selected ? "#6366F1" : "#2A2D37",
+                  }}
+                >
+                  <div className="flex gap-1 mb-2">
+                    {theme.colors.map((c, i) => (
+                      <div
+                        key={i}
+                        className="w-5 h-5 rounded-full"
+                        style={{ background: c }}
+                      />
+                    ))}
+                  </div>
+                  <p className="font-semibold text-xs" style={{ color: "#E5E7EB" }}>
+                    {theme.name}
+                  </p>
+                  <p className="text-[10px] mt-0.5" style={{ color: "#9CA3AF" }}>
+                    {theme.desc}
+                  </p>
+                  <div className="flex gap-1 mt-1.5">
+                    {theme.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[9px] px-1.5 py-0.5 rounded-full"
+                        style={{ background: "#2A2D37", color: "#9CA3AF" }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-              <p className="font-semibold text-sm" style={{ color: "#E5E7EB" }}>
-                {theme.name}
+        {/* Live preview - sticky sidebar */}
+        {data.theme && (
+          <div className="w-64 flex-shrink-0 hidden lg:block">
+            <div className="sticky top-0">
+              <p className="text-xs font-medium mb-2" style={{ color: "#9CA3AF" }}>
+                Onizleme
               </p>
-              <p className="text-xs mt-1" style={{ color: "#9CA3AF" }}>
-                {theme.desc}
-              </p>
-
-              <div className="flex gap-1 mt-2">
-                {theme.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[10px] px-2 py-0.5 rounded-full"
-                    style={{ background: "#2A2D37", color: "#9CA3AF" }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </button>
-          );
-        })}
+              <ThemePreview themeId={data.theme} sectorId={data.sector} />
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Mobile preview - below cards */}
+      {data.theme && (
+        <div className="mt-4 lg:hidden">
+          <p className="text-xs font-medium mb-2" style={{ color: "#9CA3AF" }}>
+            Onizleme
+          </p>
+          <div className="max-w-xs mx-auto">
+            <ThemePreview themeId={data.theme} sectorId={data.sector} />
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-between mt-6">
         <button
