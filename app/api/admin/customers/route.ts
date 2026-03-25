@@ -22,15 +22,43 @@ export async function GET(request: Request) {
   const { data: customers, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
-  let result = (customers || []).map((c) => ({
-    email: c.email || "",
-    name: c.full_name || "",
-    phone: c.phone || "",
-    city: c.city || "",
-    order_count: 0,
-    total_spent: 0,
-    last_order: c.created_at,
-  }));
+  // Fetch order stats per customer email
+  const customerEmails = (customers || []).map((c) => c.email).filter(Boolean);
+  let orderStats: Record<string, { count: number; total: number; last: string }> = {};
+
+  if (customerEmails.length > 0) {
+    const { data: orders } = await admin
+      .from("orders")
+      .select("customer_email, total, created_at")
+      .in("customer_email", customerEmails);
+
+    if (orders) {
+      for (const o of orders) {
+        const email = o.customer_email;
+        if (!orderStats[email]) {
+          orderStats[email] = { count: 0, total: 0, last: o.created_at };
+        }
+        orderStats[email].count++;
+        orderStats[email].total += Number(o.total) || 0;
+        if (o.created_at > orderStats[email].last) {
+          orderStats[email].last = o.created_at;
+        }
+      }
+    }
+  }
+
+  let result = (customers || []).map((c) => {
+    const stats = orderStats[c.email] || { count: 0, total: 0, last: null };
+    return {
+      email: c.email || "",
+      name: c.full_name || "",
+      phone: c.phone || "",
+      city: c.city || "",
+      order_count: stats.count,
+      total_spent: stats.total,
+      last_order: stats.last || c.created_at,
+    };
+  });
 
   // Search filter
   if (search) {

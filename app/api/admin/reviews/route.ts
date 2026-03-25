@@ -18,7 +18,7 @@ export async function GET(request: Request) {
 
   const { data, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json(data || []);
+  return NextResponse.json({ reviews: data || [], success: true });
 }
 
 export async function PUT(request: Request) {

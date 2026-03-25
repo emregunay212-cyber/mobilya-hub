@@ -38,7 +38,16 @@ export async function PUT(request, { params }) {
   if (body.description !== undefined) updateData.description = body.description ? sanitizeString(body.description, 500) : null;
   if (body.instagram !== undefined) updateData.instagram = body.instagram ? sanitizeString(body.instagram, 50) : null;
   if (body.is_active !== undefined) updateData.is_active = Boolean(body.is_active);
-  if (body.theme) updateData.settings = { theme: body.theme };
+  if (body.theme || body.settings) {
+    // Fetch current settings to merge instead of replace
+    const { data: current } = await admin.from("stores").select("settings").eq("id", id).single();
+    const existingSettings = current?.settings || {};
+    updateData.settings = {
+      ...existingSettings,
+      ...(body.settings || {}),
+      ...(body.theme ? { theme: body.theme } : {}),
+    };
+  }
   if (body.custom_domain !== undefined) {
     const domain = body.custom_domain ? sanitizeString(body.custom_domain, 100).toLowerCase().replace(/^https?:\/\//, "").replace(/\/+$/, "") : null;
     updateData.custom_domain = domain || null;

@@ -72,5 +72,5 @@ export async function GET(request) {
     .order("created_at", { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json(data);
+  return NextResponse.json({ stores: data || [], success: true });
 }
