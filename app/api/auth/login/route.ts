@@ -45,7 +45,7 @@ export async function POST(request: Request) {
         // Create a temporary token for legacy auth
         const token = await createToken({
           id: "legacy-admin",
-          email: email || "admin@mobilyahub.com",
+          email: email || "admin@webkoda.com",
           role: "superadmin",
         });
         return NextResponse.json({ token, user: { email, role: "superadmin" } });

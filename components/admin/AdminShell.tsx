@@ -57,7 +57,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
             style={{ background: "#1A1D27", borderColor: "#2A2D37" }}
           >
             <h1 className="text-sm font-semibold" style={{ color: "#9CA3AF" }}>
-              Mobilya Hub Admin
+              WebKoda Admin
             </h1>
             <div className="flex items-center gap-3">
               <span className="text-xs" style={{ color: "#9CA3AF" }}>
@@ -99,7 +99,7 @@ function Sidebar({
       {/* Logo */}
       <div className="h-14 flex items-center px-5 border-b" style={{ borderColor: "#2A2D37" }}>
         <span className="text-lg font-bold" style={{ color: "#6366F1" }}>
-          MobilyaHub
+          WebKoda
         </span>
       </div>
 

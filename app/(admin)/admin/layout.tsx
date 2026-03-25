@@ -1,7 +1,7 @@
 import AdminShell from "@/components/admin/AdminShell";
 
 export const metadata = {
-  title: "Admin Panel - MobilyaHub",
+  title: "Admin Panel - WebKoda",
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

@@ -34,6 +34,15 @@ export default function InfoStep({ data, update, onNext, onPrev }: Props) {
 
   const canContinue = data.name.trim() && data.slug.trim() && data.phone.trim();
 
+  // Sektore gore placeholder
+  const placeholders: Record<string, { name: string; slug: string; email: string; instagram: string; address: string }> = {
+    mobilyaci: { name: "Guzel Mobilya", slug: "guzel-mobilya", email: "info@guzelmobilya.com", instagram: "@guzelmobilya", address: "Sanayi Sitesi No:12" },
+    kuyumcu: { name: "Altin Dunyasi", slug: "altin-dunyasi", email: "info@altindunyasi.com", instagram: "@altindunyasi", address: "Kuyumcular Carsisi No:5" },
+    cafe: { name: "Lezzet Cafe", slug: "lezzet-cafe", email: "info@lezzetcafe.com", instagram: "@lezzetcafe", address: "Sahil Yolu Cad. No:8" },
+    "oto-galeri": { name: "Guven Otomotiv", slug: "guven-otomotiv", email: "info@guvenotomotiv.com", instagram: "@guvenotomotiv", address: "Oto Sanayi Sitesi No:15" },
+  };
+  const ph = placeholders[data.sector] || placeholders.mobilyaci;
+
   return (
     <div>
       <h2 className="text-lg font-semibold mb-1" style={{ color: "#E5E7EB" }}>
@@ -48,13 +57,13 @@ export default function InfoStep({ data, update, onNext, onPrev }: Props) {
           label="Magaza Adi *"
           value={data.name}
           onChange={(v) => update({ name: v })}
-          placeholder="Ornek: Guzel Mobilya"
+          placeholder={`Ornek: ${ph.name}`}
         />
         <Field
           label="Slug (URL)"
           value={data.slug}
           onChange={(v) => update({ slug: v })}
-          placeholder="guzel-mobilya"
+          placeholder={ph.slug}
           hint="Otomatik olusturulur"
         />
         <Field
@@ -73,7 +82,7 @@ export default function InfoStep({ data, update, onNext, onPrev }: Props) {
           label="Email"
           value={data.email}
           onChange={(v) => update({ email: v })}
-          placeholder="info@guzelmobilya.com"
+          placeholder={ph.email}
         />
         <Field
           label="Sehir"
@@ -85,13 +94,13 @@ export default function InfoStep({ data, update, onNext, onPrev }: Props) {
           label="Instagram"
           value={data.instagram}
           onChange={(v) => update({ instagram: v })}
-          placeholder="@guzelmobilya"
+          placeholder={ph.instagram}
         />
         <Field
           label="Adres"
           value={data.address}
           onChange={(v) => update({ address: v })}
-          placeholder="Sanayi Sitesi No:12"
+          placeholder={ph.address}
         />
       </div>
 
