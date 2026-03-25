@@ -1,5 +1,5 @@
 import { getAdminClient } from "@/lib/supabase";
-import { requireAdmin, authError } from "@/lib/auth";
+import { requireAdmin, authError, getAuthUser, getAccessibleStoreId, canAccessStore } from "@/lib/auth";
 import { validateProduct, sanitizeString } from "@/lib/validate";
 import { NextResponse } from "next/server";
 
@@ -7,10 +7,15 @@ export async function POST(request) {
   const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
+  const user = await getAuthUser(request);
   const admin = getAdminClient();
   const body = await request.json();
 
-  // Validate
+  // Store access check
+  if (!canAccessStore(user, body.store_id)) {
+    return NextResponse.json({ error: "Bu magazaya erisim yetkiniz yok" }, { status: 403 });
+  }
+
   const errors = validateProduct(body);
   if (errors) {
     return NextResponse.json({ error: errors.join(", ") }, { status: 400 });
@@ -44,11 +49,20 @@ export async function PUT(request) {
   const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
+  const user = await getAuthUser(request);
   const admin = getAdminClient();
   const body = await request.json();
 
   if (!body.id) {
     return NextResponse.json({ error: "Ürün ID gerekli" }, { status: 400 });
+  }
+
+  // Verify product belongs to accessible store
+  if (user?.role === "store_owner") {
+    const { data: product } = await admin.from("products").select("store_id").eq("id", body.id).single();
+    if (!product || !canAccessStore(user, product.store_id)) {
+      return NextResponse.json({ error: "Bu urune erisim yetkiniz yok" }, { status: 403 });
+    }
   }
 
   const updateData = {};
@@ -79,9 +93,10 @@ export async function GET(request) {
   const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
+  const user = await getAuthUser(request);
   const admin = getAdminClient();
   const { searchParams } = new URL(request.url);
-  const storeId = searchParams.get("store_id");
+  const storeId = getAccessibleStoreId(user, searchParams.get("store_id"));
 
   let query = admin.from("products").select("*, categories(name, slug)").order("sort_order");
   if (storeId) query = query.eq("store_id", storeId);
@@ -95,12 +110,21 @@ export async function DELETE(request) {
   const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
+  const user = await getAuthUser(request);
   const admin = getAdminClient();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 
   if (!id || typeof id !== "string" || id.length < 10) {
     return NextResponse.json({ error: "Geçerli bir ürün ID gerekli" }, { status: 400 });
+  }
+
+  // Verify product belongs to accessible store
+  if (user?.role === "store_owner") {
+    const { data: product } = await admin.from("products").select("store_id").eq("id", id).single();
+    if (!product || !canAccessStore(user, product.store_id)) {
+      return NextResponse.json({ error: "Bu urune erisim yetkiniz yok" }, { status: 403 });
+    }
   }
 
   const { error } = await admin.from("products").delete().eq("id", id);
