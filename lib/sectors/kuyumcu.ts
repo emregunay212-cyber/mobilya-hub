@@ -15,7 +15,7 @@ export const kuyumcu: SectorDefinition = {
     { name: "Pırlanta", slug: "pirlanta", icon: "💠" },
     { name: "Altın", slug: "altin", icon: "🥇" },
   ],
-  compatibleThemes: ["navy-gold", "cream-elegant", "modern-minimal"],
+  compatibleThemes: ["navy-gold", "cream-elegant", "modern-minimal", "jewel-sparkle", "midnight-luxe", "rose-garden"],
   defaultTheme: "navy-gold",
   heroTemplate: "fullwidth",
   trustBarItems: [

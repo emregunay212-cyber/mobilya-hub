@@ -12,7 +12,7 @@ export const portfolyo: SectorDefinition = {
     { name: "Fotoğraf", slug: "fotograf", icon: "📸" },
     { name: "Video", slug: "video", icon: "🎬" },
   ],
-  compatibleThemes: ["modern-minimal", "navy-gold", "cream-elegant", "business-blue"],
+  compatibleThemes: ["modern-minimal", "navy-gold", "cream-elegant", "business-blue", "midnight-luxe", "ocean-breeze", "slate-corporate", "cherry-bold"],
   defaultTheme: "modern-minimal",
   heroTemplate: "fullwidth",
   trustBarItems: [

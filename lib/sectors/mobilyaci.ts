@@ -14,7 +14,7 @@ export const mobilyaci: SectorDefinition = {
     { name: "Genç Odası", slug: "genc-odasi", icon: "🎒" },
     { name: "Mutfak", slug: "mutfak", icon: "🍳" },
   ],
-  compatibleThemes: ["classic-warm", "navy-gold", "modern-minimal", "forest-natural", "cream-elegant"],
+  compatibleThemes: ["classic-warm", "navy-gold", "modern-minimal", "forest-natural", "cream-elegant", "sunset-terracotta", "cherry-bold", "honey-warm"],
   defaultTheme: "classic-warm",
   heroTemplate: "standard",
   trustBarItems: [

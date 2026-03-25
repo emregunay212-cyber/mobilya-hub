@@ -14,7 +14,7 @@ export const cafe: SectorDefinition = {
     { name: "Sandviç & Tost", slug: "sandvic-tost", icon: "🥪" },
     { name: "Salata", slug: "salata", icon: "🥗" },
   ],
-  compatibleThemes: ["forest-natural", "modern-minimal", "cream-elegant", "cafe-cozy"],
+  compatibleThemes: ["forest-natural", "modern-minimal", "cream-elegant", "cafe-cozy", "sunset-terracotta", "ocean-breeze", "emerald-fresh", "honey-warm"],
   defaultTheme: "forest-natural",
   heroTemplate: "carousel",
   trustBarItems: [
