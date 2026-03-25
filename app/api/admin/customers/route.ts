@@ -1,14 +1,15 @@
 import { getAdminClient } from "@/lib/supabase";
-import { requireAdmin, authError } from "@/lib/auth";
+import { requireAdmin, authError, getAuthUser, getAccessibleStoreId } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
+  const user = await getAuthUser(request);
   const admin = getAdminClient();
   const { searchParams } = new URL(request.url);
-  const storeId = searchParams.get("store_id");
+  const storeId = getAccessibleStoreId(user, searchParams.get("store_id"));
   const search = searchParams.get("search");
 
   // Query customers table directly (works with existing DB schema)

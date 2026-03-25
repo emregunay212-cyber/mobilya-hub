@@ -71,11 +71,25 @@ export async function POST(request: Request) {
       .update({ last_login_at: new Date().toISOString() })
       .eq("id", adminUser.id);
 
+    // For store_owner, find their store
+    let storeId: string | undefined;
+    let storeName: string | undefined;
+    if (adminUser.role === "store_owner") {
+      const { data: store } = await supabase
+        .from("stores")
+        .select("id, name")
+        .eq("owner_id", adminUser.id)
+        .single();
+      storeId = store?.id;
+      storeName = store?.name;
+    }
+
     // Create JWT
     const token = await createToken({
       id: adminUser.id,
       email: adminUser.email,
       role: adminUser.role,
+      store_id: storeId,
     });
 
     return NextResponse.json({
@@ -85,6 +99,8 @@ export async function POST(request: Request) {
         email: adminUser.email,
         role: adminUser.role,
         full_name: adminUser.full_name,
+        store_id: storeId,
+        store_name: storeName,
       },
     });
   } catch {

@@ -11,6 +11,7 @@ export interface AdminUser {
   id: string;
   email: string;
   role: string;
+  store_id?: string;
 }
 
 export interface AuthResult {
@@ -18,34 +19,29 @@ export interface AuthResult {
   status: number;
 }
 
-/**
- * Hash a password with bcrypt.
- */
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
 }
 
-/**
- * Verify a password against a bcrypt hash.
- */
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
 
-/**
- * Create a signed JWT token for an admin user.
- */
 export async function createToken(user: AdminUser): Promise<string> {
-  return new SignJWT({ sub: user.id, email: user.email, role: user.role })
+  const payload: Record<string, unknown> = {
+    sub: user.id,
+    email: user.email,
+    role: user.role,
+  };
+  if (user.store_id) payload.store_id = user.store_id;
+
+  return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(TOKEN_EXPIRY)
     .sign(JWT_SECRET);
 }
 
-/**
- * Verify and decode a JWT token.
- */
 export async function verifyToken(token: string): Promise<AdminUser | null> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
@@ -53,6 +49,7 @@ export async function verifyToken(token: string): Promise<AdminUser | null> {
       id: payload.sub as string,
       email: payload.email as string,
       role: payload.role as string,
+      store_id: (payload.store_id as string) || undefined,
     };
   } catch {
     return null;
@@ -60,10 +57,7 @@ export async function verifyToken(token: string): Promise<AdminUser | null> {
 }
 
 /**
- * Middleware helper: require admin auth on API routes.
- * Supports both:
- * - New JWT auth (Authorization: Bearer <jwt>)
- * - Legacy ADMIN_SECRET auth (for backward compatibility during migration)
+ * Middleware: require admin auth. Returns null if ok, AuthResult if denied.
  */
 export async function requireAdmin(request: Request): Promise<AuthResult | null> {
   const authHeader = request.headers.get("authorization");
@@ -72,12 +66,9 @@ export async function requireAdmin(request: Request): Promise<AuthResult | null>
   }
 
   const token = authHeader.slice(7);
-
-  // Try JWT verification first
   const user = await verifyToken(token);
-  if (user) return null; // Auth passed via JWT
+  if (user) return null;
 
-  // Fallback: legacy ADMIN_SECRET comparison (will be removed after full migration)
   const secret = process.env.ADMIN_SECRET;
   if (secret && token === secret) return null;
 
@@ -85,8 +76,50 @@ export async function requireAdmin(request: Request): Promise<AuthResult | null>
 }
 
 /**
- * Convert auth error result to JSON response.
+ * Get the authenticated user from request. Returns null if not authenticated.
  */
+export async function getAuthUser(request: Request): Promise<AdminUser | null> {
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
+  return verifyToken(authHeader.slice(7));
+}
+
+/**
+ * Check if user can access a specific store.
+ * superadmin/admin → can access any store
+ * store_owner → can only access their own store
+ */
+export function canAccessStore(user: AdminUser | null, storeId: string): boolean {
+  if (!user) return false;
+  if (user.role === "superadmin" || user.role === "admin") return true;
+  if (user.role === "store_owner") return user.store_id === storeId;
+  return false;
+}
+
+/**
+ * Get the store_id this user is allowed to access.
+ * superadmin → returns the requested storeId (or null for all)
+ * store_owner → always returns their own store_id
+ */
+export function getAccessibleStoreId(user: AdminUser | null, requestedStoreId?: string | null): string | null {
+  if (!user) return null;
+  if (user.role === "store_owner") return user.store_id || null;
+  return requestedStoreId || null;
+}
+
+/**
+ * Require superadmin role. Returns AuthResult if denied.
+ */
+export async function requireSuperAdmin(request: Request): Promise<AuthResult | null> {
+  const denied = await requireAdmin(request);
+  if (denied) return denied;
+  const user = await getAuthUser(request);
+  if (!user || (user.role !== "superadmin" && user.role !== "admin")) {
+    return { error: "Bu islem icin yetkiniz yok", status: 403 };
+  }
+  return null;
+}
+
 export function authError(result: AuthResult): NextResponse {
   return NextResponse.json({ error: result.error }, { status: result.status });
 }

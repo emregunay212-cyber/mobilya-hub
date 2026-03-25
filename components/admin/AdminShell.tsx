@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 /* ── Auth context ────────────────────────────────────── */
 interface AuthCtx {
   token: string;
-  user: { email: string; role: string; full_name?: string };
+  user: { email: string; role: string; full_name?: string; store_id?: string; store_name?: string };
   logout: () => void;
 }
 
@@ -20,23 +20,27 @@ export function useAuth() {
 }
 
 /* ── Sidebar nav items ───────────────────────────────── */
-const NAV = [
-  { href: "/admin", label: "Dashboard", icon: DashboardIcon },
-  { href: "/admin/stores", label: "Magazalar", icon: StoreIcon },
-  { href: "/admin/products", label: "Urunler", icon: ProductIcon },
-  { href: "/admin/categories", label: "Kategoriler", icon: CategoryIcon },
-  { href: "/admin/orders", label: "Siparisler", icon: OrderIcon },
-  { href: "/admin/coupons", label: "Kuponlar", icon: CouponIcon },
-  { href: "/admin/reviews", label: "Yorumlar", icon: ReviewIcon },
-  { href: "/admin/customers", label: "Musteriler", icon: CustomerIcon },
-  { href: "/admin/analytics", label: "Analitik", icon: AnalyticsIcon },
-  { href: "/admin/stores/new", label: "Yeni Magaza", icon: PlusIcon },
+const NAV_ALL = [
+  { href: "/admin", label: "Dashboard", icon: DashboardIcon, roles: ["superadmin", "admin", "store_owner"] },
+  { href: "/admin/stores", label: "Magazalar", icon: StoreIcon, roles: ["superadmin", "admin"] },
+  { href: "/admin/products", label: "Urunler", icon: ProductIcon, roles: ["superadmin", "admin", "store_owner"] },
+  { href: "/admin/categories", label: "Kategoriler", icon: CategoryIcon, roles: ["superadmin", "admin", "store_owner"] },
+  { href: "/admin/orders", label: "Siparisler", icon: OrderIcon, roles: ["superadmin", "admin", "store_owner"] },
+  { href: "/admin/coupons", label: "Kuponlar", icon: CouponIcon, roles: ["superadmin", "admin", "store_owner"] },
+  { href: "/admin/reviews", label: "Yorumlar", icon: ReviewIcon, roles: ["superadmin", "admin", "store_owner"] },
+  { href: "/admin/customers", label: "Musteriler", icon: CustomerIcon, roles: ["superadmin", "admin", "store_owner"] },
+  { href: "/admin/analytics", label: "Analitik", icon: AnalyticsIcon, roles: ["superadmin", "admin"] },
+  { href: "/admin/stores/new", label: "Yeni Magaza", icon: PlusIcon, roles: ["superadmin", "admin"] },
 ];
+
+function getNavForRole(role: string) {
+  return NAV_ALL.filter((item) => item.roles.includes(role));
+}
 
 /* ── Component ───────────────────────────────────────── */
 export default function AdminShell({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<{ email: string; role: string; full_name?: string } | null>(null);
+  const [user, setUser] = useState<{ email: string; role: string; full_name?: string; store_id?: string; store_name?: string } | null>(null);
 
   if (!token || !user) {
     return <LoginScreen onLogin={(t, u) => { setToken(t); setUser(u); }} />;
@@ -87,10 +91,11 @@ function Sidebar({
   user,
   onLogout,
 }: {
-  user: { email: string; role: string; full_name?: string };
+  user: { email: string; role: string; full_name?: string; store_name?: string };
   onLogout: () => void;
 }) {
   const pathname = usePathname();
+  const navItems = getNavForRole(user.role);
 
   return (
     <aside
@@ -99,14 +104,21 @@ function Sidebar({
     >
       {/* Logo */}
       <div className="h-14 flex items-center px-5 border-b" style={{ borderColor: "#2A2D37" }}>
-        <span className="text-lg font-bold" style={{ color: "#6366F1" }}>
-          WebKoda
-        </span>
+        <div>
+          <span className="text-lg font-bold" style={{ color: "#6366F1" }}>
+            WebKoda
+          </span>
+          {user.store_name && (
+            <p className="text-[10px] -mt-0.5" style={{ color: "#9CA3AF" }}>
+              {user.store_name}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 py-4 space-y-1 px-3">
-        {NAV.map((item) => {
+        {navItems.map((item) => {
           const active = pathname === item.href;
           return (
             <Link

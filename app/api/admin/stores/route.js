@@ -1,10 +1,11 @@
 import { getAdminClient } from "@/lib/supabase";
-import { requireAdmin, authError } from "@/lib/auth";
+import { requireAdmin, requireSuperAdmin, authError, getAuthUser } from "@/lib/auth";
 import { validateStore, sanitizeString } from "@/lib/validate";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  const denied = await requireAdmin(request);
+  // Only superadmin can create stores
+  const denied = await requireSuperAdmin(request);
   if (denied) return authError(denied);
 
   const admin = getAdminClient();
@@ -65,12 +66,20 @@ export async function GET(request) {
   const denied = await requireAdmin(request);
   if (denied) return authError(denied);
 
+  const user = await getAuthUser(request);
   const admin = getAdminClient();
-  const { data, error } = await admin
+
+  let query = admin
     .from("stores")
     .select("*, categories(count), products(count)")
     .order("created_at", { ascending: false });
 
+  // store_owner can only see their own store
+  if (user?.role === "store_owner" && user.store_id) {
+    query = query.eq("id", user.store_id);
+  }
+
+  const { data, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json({ stores: data || [], success: true });
 }
