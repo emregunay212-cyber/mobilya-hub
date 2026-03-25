@@ -5,6 +5,7 @@ export const kuyumcu: SectorDefinition = {
   name: "Kuyumcu",
   icon: "💎",
   description: "Kuyumcu ve mücevherat mağazaları için web sitesi",
+  siteType: "ecommerce",
   defaultCategories: [
     { name: "Yüzük", slug: "yuzuk", icon: "💍" },
     { name: "Kolye", slug: "kolye", icon: "📿" },

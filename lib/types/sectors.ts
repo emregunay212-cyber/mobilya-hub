@@ -16,11 +16,14 @@ export interface TrustBarItem {
   subtitle: string;
 }
 
+export type SiteType = "ecommerce" | "showcase" | "menu" | "portfolio" | "appointment";
+
 export interface SectorDefinition {
   id: string;
   name: string;
   icon: string;
   description: string;
+  siteType: SiteType;
   defaultCategories: { name: string; slug: string; icon?: string }[];
   compatibleThemes: string[];
   defaultTheme: string;

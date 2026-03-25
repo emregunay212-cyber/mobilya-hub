@@ -54,6 +54,46 @@ const SECTOR_CONFIG = {
     ],
     whatsappText: "WhatsApp ile Bilgi Al",
   },
+  tanitim: {
+    emoji: "🏢",
+    features: [
+      { icon: "✅", text: "Profesyonel Hizmet" },
+      { icon: "📅", text: "Deneyimli Ekip" },
+      { icon: "⭐", text: "Musteri Memnuniyeti" },
+      { icon: "📞", text: "7/24 Destek" },
+    ],
+    whatsappText: "WhatsApp ile Iletisime Gec",
+  },
+  restoran: {
+    emoji: "🍽️",
+    features: [
+      { icon: "🥬", text: "Taze Malzeme" },
+      { icon: "📋", text: "Gunluk Menu" },
+      { icon: "⚡", text: "Hizli Servis" },
+      { icon: "🧼", text: "Hijyen Sertifikali" },
+    ],
+    whatsappText: "WhatsApp ile Rezervasyon Yap",
+  },
+  portfolyo: {
+    emoji: "🎨",
+    features: [
+      { icon: "🏆", text: "Odul Kazanan" },
+      { icon: "💡", text: "Yaratici Cozumler" },
+      { icon: "⏰", text: "Zamaninda Teslim" },
+      { icon: "🤝", text: "Musteri Odakli" },
+    ],
+    whatsappText: "WhatsApp ile Iletisime Gec",
+  },
+  kuafor: {
+    emoji: "💇",
+    features: [
+      { icon: "👩‍🔬", text: "Uzman Kadro" },
+      { icon: "🧼", text: "Hijyenik Ortam" },
+      { icon: "📅", text: "Online Randevu" },
+      { icon: "⭐", text: "Musteri Memnuniyeti" },
+    ],
+    whatsappText: "WhatsApp ile Randevu Al",
+  },
 };
 
 function getSectorConfig(store) {

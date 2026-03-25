@@ -24,15 +24,25 @@ function slugify(t: string) {
     .replace(/(^-|-$)/g, "");
 }
 
+const CATEGORY_LABELS: Record<string, { title: string; subtitle: string; placeholder: string }> = {
+  ecommerce: { title: "Kategoriler", subtitle: "Magazanizin urun kategorilerini duzenleyin", placeholder: "Yeni kategori adi..." },
+  showcase: { title: "Hizmetler", subtitle: "Firmanizin hizmet alanlarini duzenleyin", placeholder: "Yeni hizmet adi..." },
+  menu: { title: "Menu Gruplari", subtitle: "Restoraninizin menu gruplarini duzenleyin", placeholder: "Yeni menu grubu adi..." },
+  portfolio: { title: "Proje Turleri", subtitle: "Portfolyonuzdaki proje turlerini duzenleyin", placeholder: "Yeni proje turu adi..." },
+  appointment: { title: "Hizmetler", subtitle: "Isletmenizin hizmet kategorilerini duzenleyin", placeholder: "Yeni hizmet adi..." },
+};
+
 export default function CategoryStep({ data, update, onNext, onPrev }: Props) {
   const [newCatName, setNewCatName] = useState("");
+  const sector = getSectorById(data.sector);
+  const labels = CATEGORY_LABELS[sector?.siteType || "ecommerce"] || CATEGORY_LABELS.ecommerce;
 
   // Pre-populate from sector defaults if empty
   useEffect(() => {
     if (data.categories.length === 0 && data.sector) {
-      const sector = getSectorById(data.sector);
-      if (sector) {
-        update({ categories: [...sector.defaultCategories] });
+      const s = getSectorById(data.sector);
+      if (s) {
+        update({ categories: [...s.defaultCategories] });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,10 +64,10 @@ export default function CategoryStep({ data, update, onNext, onPrev }: Props) {
   return (
     <div>
       <h2 className="text-lg font-semibold mb-1" style={{ color: "#E5E7EB" }}>
-        Kategoriler
+        {labels.title}
       </h2>
       <p className="text-sm mb-6" style={{ color: "#9CA3AF" }}>
-        Magazanizin urun kategorilerini duzenleyin
+        {labels.subtitle}
       </p>
 
       {/* Category list */}
@@ -95,7 +105,7 @@ export default function CategoryStep({ data, update, onNext, onPrev }: Props) {
           value={newCatName}
           onChange={(e) => setNewCatName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addCategory()}
-          placeholder="Yeni kategori adi..."
+          placeholder={labels.placeholder}
           className="flex-1 px-3 py-2 rounded-lg border text-sm outline-none placeholder:text-gray-600"
           style={{ background: "#0F1117", borderColor: "#2A2D37", color: "#E5E7EB" }}
         />
