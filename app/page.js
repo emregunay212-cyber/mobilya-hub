@@ -48,47 +48,47 @@ export default async function HomePage() {
       </nav>
 
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-24 pb-12 sm:pt-32 sm:pb-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-6" style={{ background: "#C8553D15", color: "#C8553D" }}>
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-bold mb-4 sm:mb-6" style={{ background: "#C8553D15", color: "#C8553D" }}>
             ✦ {storeCount}+ İşletme Bize Güveniyor
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.1] mb-6" style={{ color: "#2C2420" }}>
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black tracking-tight leading-[1.1] mb-4 sm:mb-6" style={{ color: "#2C2420" }}>
             İşletmenizin Web Sitesi<br />
             <span style={{ color: "#C8553D" }}>24 Saatte Hazır</span>
           </h1>
-          <p className="text-lg max-w-2xl mx-auto mb-10 leading-relaxed" style={{ color: "#6B5B4E" }}>
+          <p className="text-sm sm:text-lg max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed" style={{ color: "#6B5B4E" }}>
             Mobilyacı, kuyumcu, kafe, restoran, kuaför, oto galeri...
             Sektörünüze özel profesyonel web sitesi. Kod bilgisi gerekmez.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <a
               href="https://wa.me/905459318516?text=Merhaba%2C%20web%20sitesi%20yaptirmak%20istiyorum"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 rounded-full text-sm font-bold text-white inline-flex items-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-full text-sm font-bold text-white inline-flex items-center justify-center gap-2"
               style={{ background: "#25D366" }}
             >
               💬 WhatsApp ile Ulaşın
             </a>
-            <a href="#portfolyo" className="px-8 py-4 rounded-full text-sm font-bold border-2 inline-flex items-center gap-2" style={{ borderColor: "#2C2420", color: "#2C2420" }}>
+            <a href="#portfolyo" className="w-full sm:w-auto px-8 py-4 rounded-full text-sm font-bold border-2 inline-flex items-center justify-center gap-2" style={{ borderColor: "#2C2420", color: "#2C2420" }}>
               Örnekleri Gör →
             </a>
           </div>
         </div>
       </section>
 
-      {/* Sectors */}
-      <section className="py-12 px-6">
+      {/* Sectors - horizontal scroll on mobile */}
+      <section className="py-8 sm:py-12 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex gap-2.5 sm:gap-3 overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-center scrollbar-hide pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
             {Object.entries(SECTOR_ICONS).map(([key, icon]) => (
               <div
                 key={key}
-                className="flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold"
+                className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap shrink-0 sm:shrink"
                 style={{ background: "#fff", border: "1px solid #E8DDD0", color: "#2C2420" }}
               >
-                <span className="text-lg">{icon}</span>
+                <span className="text-base sm:text-lg">{icon}</span>
                 {SECTOR_NAMES[key]}
               </div>
             ))}
@@ -97,15 +97,15 @@ export default async function HomePage() {
       </section>
 
       {/* Features */}
-      <section id="ozellikler" className="py-20 px-6">
+      <section id="ozellikler" className="py-12 sm:py-20 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <p className="text-xs font-bold tracking-[0.3em] uppercase text-center mb-2" style={{ color: "#C8553D" }}>
             ÖZELLİKLER
           </p>
-          <h2 className="text-3xl font-black text-center mb-12" style={{ color: "#2C2420" }}>
+          <h2 className="text-2xl sm:text-3xl font-black text-center mb-8 sm:mb-12" style={{ color: "#2C2420" }}>
             Neden WebKoda?
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {[
               ["⚡", "Hızlı Kurulum", "24 saat içinde siteniz hazır. Beklemek yok, hemen yayında."],
               ["🎨", "18+ Profesyonel Tema", "Sektörünüze özel tasarlanmış, mobil uyumlu temalar."],
@@ -116,12 +116,12 @@ export default async function HomePage() {
             ].map(([icon, title, desc]) => (
               <div
                 key={title}
-                className="p-6 rounded-2xl"
+                className="p-4 sm:p-6 rounded-xl sm:rounded-2xl"
                 style={{ background: "#fff", border: "1px solid #E8DDD0" }}
               >
-                <div className="text-3xl mb-3">{icon}</div>
-                <h3 className="font-bold mb-2" style={{ color: "#2C2420" }}>{title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: "#6B5B4E" }}>{desc}</p>
+                <div className="text-2xl sm:text-3xl mb-2 sm:mb-3">{icon}</div>
+                <h3 className="font-bold text-sm sm:text-base mb-1 sm:mb-2" style={{ color: "#2C2420" }}>{title}</h3>
+                <p className="text-xs sm:text-sm leading-relaxed" style={{ color: "#6B5B4E" }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -129,35 +129,35 @@ export default async function HomePage() {
       </section>
 
       {/* Portfolio */}
-      <section id="portfolyo" className="py-20 px-6" style={{ background: "#2C2420" }}>
+      <section id="portfolyo" className="py-12 sm:py-20 px-4 sm:px-6" style={{ background: "#2C2420" }}>
         <div className="max-w-5xl mx-auto">
           <p className="text-xs font-bold tracking-[0.3em] uppercase text-center mb-2" style={{ color: "#C8553D" }}>
             PORTFOLYO
           </p>
-          <h2 className="text-3xl font-black text-center mb-12 text-white">
+          <h2 className="text-2xl sm:text-3xl font-black text-center mb-8 sm:mb-12 text-white">
             Yaptığımız Siteler
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {stores?.map((store) => {
               const sector = store.settings?.sector || "mobilyaci";
               return (
                 <Link
                   key={store.id}
                   href={`/${store.slug}`}
-                  className="block rounded-2xl overflow-hidden transition-transform hover:scale-[1.02]"
+                  className="block rounded-xl sm:rounded-2xl overflow-hidden transition-transform active:scale-[0.98] hover:scale-[1.02]"
                   style={{ background: "#3A3530" }}
                 >
-                  <div className="aspect-video flex items-center justify-center text-5xl" style={{ background: "#4A4540" }}>
+                  <div className="aspect-video flex items-center justify-center text-3xl sm:text-5xl" style={{ background: "#4A4540" }}>
                     {SECTOR_ICONS[sector] || "🏪"}
                   </div>
-                  <div className="p-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "#C8553D20", color: "#C8553D" }}>
+                  <div className="p-3 sm:p-5">
+                    <div className="flex items-center gap-2 mb-1 sm:mb-2">
+                      <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full font-medium" style={{ background: "#C8553D20", color: "#C8553D" }}>
                         {SECTOR_NAMES[sector] || sector}
                       </span>
                     </div>
-                    <h3 className="font-bold text-white mb-1">{store.name}</h3>
-                    <p className="text-xs" style={{ color: "#9CA3AF" }}>
+                    <h3 className="font-bold text-white text-sm sm:text-base mb-0.5 sm:mb-1 truncate">{store.name}</h3>
+                    <p className="text-[10px] sm:text-xs" style={{ color: "#9CA3AF" }}>
                       📍 {store.city}
                     </p>
                   </div>
@@ -168,18 +168,18 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="fiyat" className="py-20 px-6">
+      {/* Pricing - horizontal scroll on mobile */}
+      <section id="fiyat" className="py-12 sm:py-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <p className="text-xs font-bold tracking-[0.3em] uppercase text-center mb-2" style={{ color: "#C8553D" }}>
             FİYATLAR
           </p>
-          <h2 className="text-3xl font-black text-center mb-12" style={{ color: "#2C2420" }}>
+          <h2 className="text-2xl sm:text-3xl font-black text-center mb-8 sm:mb-12" style={{ color: "#2C2420" }}>
             İşletmenize Uygun Paket Seçin
           </h2>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="flex gap-4 overflow-x-auto sm:overflow-visible sm:grid sm:grid-cols-3 sm:gap-6 pb-4 sm:pb-0 scrollbar-hide snap-x-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
             {/* Starter */}
-            <div className="rounded-2xl p-6" style={{ background: "#fff", border: "1px solid #E8DDD0" }}>
+            <div className="rounded-2xl p-5 sm:p-6 min-w-[260px] sm:min-w-0 shrink-0 sm:shrink snap-start" style={{ background: "#fff", border: "1px solid #E8DDD0" }}>
               <p className="text-xs font-bold uppercase mb-1" style={{ color: "#6B5B4E" }}>Başlangıç</p>
               <p className="text-3xl font-black mb-1" style={{ color: "#2C2420" }}>₺750<span className="text-sm font-normal" style={{ color: "#6B5B4E" }}>/ay</span></p>
               <p className="text-xs mb-6" style={{ color: "#9CA3AF" }}>+ ₺2.000 kurulum</p>
@@ -190,7 +190,7 @@ export default async function HomePage() {
               </ul>
             </div>
             {/* Pro */}
-            <div className="rounded-2xl p-6 relative" style={{ background: "#2C2420", border: "2px solid #C8553D" }}>
+            <div className="rounded-2xl p-5 sm:p-6 relative min-w-[260px] sm:min-w-0 shrink-0 sm:shrink snap-start" style={{ background: "#2C2420", border: "2px solid #C8553D" }}>
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-bold text-white" style={{ background: "#C8553D" }}>
                 POPÜLER
               </div>
@@ -204,7 +204,7 @@ export default async function HomePage() {
               </ul>
             </div>
             {/* Enterprise */}
-            <div className="rounded-2xl p-6" style={{ background: "#fff", border: "1px solid #E8DDD0" }}>
+            <div className="rounded-2xl p-5 sm:p-6 min-w-[260px] sm:min-w-0 shrink-0 sm:shrink snap-start" style={{ background: "#fff", border: "1px solid #E8DDD0" }}>
               <p className="text-xs font-bold uppercase mb-1" style={{ color: "#6B5B4E" }}>Kurumsal</p>
               <p className="text-3xl font-black mb-1" style={{ color: "#2C2420" }}>₺2.500<span className="text-sm font-normal" style={{ color: "#6B5B4E" }}>/ay</span></p>
               <p className="text-xs mb-6" style={{ color: "#9CA3AF" }}>+ ₺5.000 kurulum</p>
@@ -219,19 +219,19 @@ export default async function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6 text-center" style={{ background: "#C8553D" }}>
+      <section className="py-12 sm:py-20 px-4 sm:px-6 text-center" style={{ background: "#C8553D" }}>
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl font-black text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl font-black text-white mb-3 sm:mb-4">
             İşletmenizi Online'a Taşıyalım
           </h2>
-          <p className="text-white/80 mb-8">
+          <p className="text-sm sm:text-base text-white/80 mb-6 sm:mb-8">
             Hemen WhatsApp'tan yazın, 24 saat içinde siteniz hazır olsun.
           </p>
           <a
             href="https://wa.me/905459318516?text=Merhaba%2C%20web%20sitesi%20yaptirmak%20istiyorum"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-bold"
+            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm font-bold w-full sm:w-auto justify-center"
             style={{ background: "#fff", color: "#2C2420" }}
           >
             💬 Ücretsiz Teklif Alın
@@ -240,7 +240,7 @@ export default async function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6" style={{ background: "#2C2420" }}>
+      <footer className="py-8 sm:py-12 px-4 sm:px-6" style={{ background: "#2C2420" }}>
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <span className="text-sm font-bold text-white">
             Web<span style={{ color: "#C8553D" }}>Koda</span>
