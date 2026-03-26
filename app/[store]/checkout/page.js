@@ -180,14 +180,14 @@ export default function CheckoutPage() {
             <div className="grid md:grid-cols-3 gap-6">
               {/* Form */}
               <div className="md:col-span-2 space-y-4">
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                  <h2 className="font-semibold text-gray-800 mb-4">Teslimat Bilgileri</h2>
+                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
+                  <h2 className="font-semibold text-gray-800 mb-3 sm:mb-4">Teslimat Bilgileri</h2>
 
                   {error && (
                     <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm">{error}</div>
                   )}
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <InputField label="Ad Soyad" required value={form.customer_name}
                       onChange={(v) => setForm((f) => ({ ...f, customer_name: v }))} />
                     <InputField label="E-posta" type="email" required value={form.customer_email}
@@ -196,7 +196,7 @@ export default function CheckoutPage() {
                       onChange={(v) => setForm((f) => ({ ...f, customer_phone: v }))} />
                     <InputField label="Sehir" value={form.shipping_city}
                       onChange={(v) => setForm((f) => ({ ...f, shipping_city: v }))} />
-                    <div className="col-span-2">
+                    <div className="sm:col-span-2">
                       <InputField label="Adres" value={form.shipping_address}
                         onChange={(v) => setForm((f) => ({ ...f, shipping_address: v }))} />
                     </div>
@@ -213,8 +213,8 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                  <h2 className="font-semibold text-gray-800 mb-4">Odeme Yontemi</h2>
+                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
+                  <h2 className="font-semibold text-gray-800 mb-3 sm:mb-4">Odeme Yontemi</h2>
                   <div className="space-y-2">
                     {[
                       { value: "cod", label: "Kapida Odeme" },
@@ -236,7 +236,7 @@ export default function CheckoutPage() {
 
               {/* Summary */}
               <div>
-                <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-4">
+                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:sticky md:top-4">
                   <h2 className="font-semibold text-gray-800 mb-4">Siparis Ozeti</h2>
                   <div className="space-y-3 mb-4">
                     {cart.map((item, idx) => (

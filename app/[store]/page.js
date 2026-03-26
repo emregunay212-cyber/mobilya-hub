@@ -148,20 +148,20 @@ export default async function StorePage({ params, searchParams }) {
     <main>
       {/* Hero */}
       <section className="relative overflow-hidden" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(44,36,32,0.05) 1px, transparent 0)", backgroundSize: "32px 32px" }}>
-        <div className="max-w-6xl mx-auto px-4 py-16 sm:py-24">
+        <div className="max-w-6xl mx-auto px-4 py-10 sm:py-16 lg:py-24">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold tracking-[0.3em] uppercase text-[var(--color-accent)] mb-3">
+            <p className="text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase text-[var(--color-accent)] mb-2 sm:mb-3">
               {config.heroLabel(store.city)}
             </p>
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-[1.1] mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] mb-3 sm:mb-4">
               {store.name}
             </h1>
-            <p className="text-base text-[var(--color-muted)] leading-relaxed mb-8 max-w-lg">
+            <p className="text-sm sm:text-base text-[var(--color-muted)] leading-relaxed mb-5 sm:mb-8 max-w-lg">
               {store.description}
             </p>
-            <div className="flex flex-wrap gap-6 text-sm">
+            <div className="flex flex-wrap gap-3 sm:gap-6 text-xs sm:text-sm">
               {store.phone && (
-                <a href={`tel:${store.phone}`} className="flex items-center gap-1.5 text-[var(--color-muted)] hover:text-[var(--color-brand)]">
+                <a href={`tel:${store.phone}`} className="flex items-center gap-1.5 text-[var(--color-muted)] active:text-[var(--color-brand)]">
                   📞 {store.phone}
                 </a>
               )}
@@ -174,23 +174,23 @@ export default async function StorePage({ params, searchParams }) {
       </section>
 
       {/* Products */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-end justify-between mb-8">
+      <section className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
+        <div className="flex items-end justify-between mb-5 sm:mb-8">
           <div>
-            <p className="text-xs font-bold tracking-[0.25em] uppercase text-[var(--color-accent)] mb-1">{config.collectionLabel}</p>
-            <h2 className="text-3xl font-bold tracking-tight">{config.collectionTitle}</h2>
+            <p className="text-[10px] sm:text-xs font-bold tracking-[0.25em] uppercase text-[var(--color-accent)] mb-1">{config.collectionLabel}</p>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">{config.collectionTitle}</h2>
           </div>
-          <p className="text-sm text-[var(--color-muted)]">{products.length} {config.productUnit}</p>
+          <p className="text-xs sm:text-sm text-[var(--color-muted)]">{products.length} {config.productUnit}</p>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex gap-2 flex-wrap mb-8">
+        {/* Category Filter - horizontal scroll on mobile */}
+        <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap scrollbar-hide snap-x-mandatory mb-6 sm:mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
           <a
             href={`/${slug}`}
-            className={`px-4 py-2 rounded-full text-sm font-semibold border transition-colors ${
+            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border transition-colors whitespace-nowrap shrink-0 snap-start ${
               !categoryFilter
                 ? "bg-[var(--color-brand)] text-white border-[var(--color-brand)]"
-                : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+                : "border-[var(--color-border)] text-[var(--color-muted)] active:border-[var(--color-brand)] active:text-[var(--color-brand)]"
             }`}
           >
             Tümü
@@ -199,10 +199,10 @@ export default async function StorePage({ params, searchParams }) {
             <a
               key={cat.id}
               href={`/${slug}?kategori=${cat.slug}`}
-              className={`px-4 py-2 rounded-full text-sm font-semibold border transition-colors ${
+              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border transition-colors whitespace-nowrap shrink-0 snap-start ${
                 categoryFilter === cat.slug
                   ? "bg-[var(--color-brand)] text-white border-[var(--color-brand)]"
-                  : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+                  : "border-[var(--color-border)] text-[var(--color-muted)] active:border-[var(--color-brand)] active:text-[var(--color-brand)]"
               }`}
             >
               {cat.name}
@@ -213,16 +213,16 @@ export default async function StorePage({ params, searchParams }) {
         <ProductGrid products={products} storeSlug={slug} productEmoji={config.emoji} whatsapp={store.whatsapp} />
       </section>
 
-      {/* Trust Bar */}
-      <section className="bg-[var(--color-brand)] text-white">
-        <div className="max-w-6xl mx-auto px-4 py-10 flex flex-wrap justify-around gap-8 text-center">
+      {/* Trust Bar - 2x2 grid on mobile, 4-col on desktop */}
+      <section className="bg-[var(--color-brand)] text-white scroll-reveal">
+        <div className="max-w-6xl mx-auto px-4 py-8 sm:py-10 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 text-center">
           {(store.settings?.trustBar || config.trustBar).map((item) => {
             const [icon, title, sub] = Array.isArray(item) ? item : [item.icon, item.title, item.subtitle];
             return (
-              <div key={title}>
-                <p className="text-2xl mb-1">{icon}</p>
-                <p className="font-bold text-sm">{title}</p>
-                <p className="text-xs text-white/60">{sub}</p>
+              <div key={title} className="py-2 sm:py-0">
+                <p className="text-xl sm:text-2xl mb-1">{icon}</p>
+                <p className="font-bold text-xs sm:text-sm">{title}</p>
+                <p className="text-[10px] sm:text-xs text-white/60">{sub}</p>
               </div>
             );
           })}
@@ -231,16 +231,16 @@ export default async function StorePage({ params, searchParams }) {
 
       {/* WhatsApp CTA */}
       {store.whatsapp && (
-        <section className="py-16 px-4 text-center">
-          <h2 className="text-2xl font-bold mb-3">{config.ctaTitle}</h2>
-          <p className="text-[var(--color-muted)] mb-6 max-w-md mx-auto">
+        <section className="py-10 sm:py-16 px-4 text-center scroll-reveal">
+          <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">{config.ctaTitle}</h2>
+          <p className="text-sm sm:text-base text-[var(--color-muted)] mb-5 sm:mb-6 max-w-md mx-auto">
             {config.ctaDesc}
           </p>
           <a
             href={`https://wa.me/${store.whatsapp}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-3.5 rounded-full transition-colors"
+            className="inline-flex items-center gap-2 bg-green-600 active:bg-green-700 text-white font-bold px-6 sm:px-8 py-3.5 rounded-full transition-colors text-sm sm:text-base"
           >
             💬 WhatsApp ile Yaz
           </a>
