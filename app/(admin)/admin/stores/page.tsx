@@ -133,6 +133,7 @@ export default function StoresPage() {
           </Link>
         </div>
       ) : (
+        <>
         {/* Desktop Table */}
         <div
           className="hidden md:block rounded-xl border overflow-hidden"
@@ -211,6 +212,7 @@ export default function StoresPage() {
             </div>
           ))}
         </div>
+        </>
       )}
     </div>
   );
