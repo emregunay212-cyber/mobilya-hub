@@ -35,7 +35,7 @@ export default async function HomePage() {
             <a href="#portfolyo" className="text-sm font-medium hidden sm:block" style={{ color: "#6B5B4E" }}>Portfolyo</a>
             <a href="#fiyat" className="text-sm font-medium hidden sm:block" style={{ color: "#6B5B4E" }}>Fiyatlar</a>
             <a
-              href="https://wa.me/905551234567"
+              href="https://wa.me/905459318516"
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 rounded-full text-sm font-bold text-white"
@@ -63,7 +63,7 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="https://wa.me/905551234567?text=Merhaba%2C%20web%20sitesi%20yaptirmak%20istiyorum"
+              href="https://wa.me/905459318516?text=Merhaba%2C%20web%20sitesi%20yaptirmak%20istiyorum"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 rounded-full text-sm font-bold text-white inline-flex items-center gap-2"
@@ -228,7 +228,7 @@ export default async function HomePage() {
             Hemen WhatsApp'tan yazın, 24 saat içinde siteniz hazır olsun.
           </p>
           <a
-            href="https://wa.me/905551234567?text=Merhaba%2C%20web%20sitesi%20yaptirmak%20istiyorum"
+            href="https://wa.me/905459318516?text=Merhaba%2C%20web%20sitesi%20yaptirmak%20istiyorum"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-bold"
@@ -249,7 +249,7 @@ export default async function HomePage() {
             © 2025 WebKoda. Tüm hakları saklıdır.
           </p>
           <div className="flex gap-4">
-            <a href="https://wa.me/905551234567" className="text-xs" style={{ color: "#9CA3AF" }}>WhatsApp</a>
+            <a href="https://wa.me/905459318516" className="text-xs" style={{ color: "#9CA3AF" }}>WhatsApp</a>
             <a href="https://instagram.com/webkoda" className="text-xs" style={{ color: "#9CA3AF" }}>Instagram</a>
           </div>
         </div>
