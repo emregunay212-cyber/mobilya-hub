@@ -165,8 +165,8 @@ export default function OrdersPage() {
           <p className="text-sm" style={{ color: "#9CA3AF" }}>Siparis bulunamadi.</p>
         </div>
       ) : (
-        <div className="rounded-xl border overflow-hidden" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
-          <table className="w-full text-sm">
+        <div className="rounded-xl border overflow-x-auto" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr style={{ borderBottom: "1px solid #2A2D37" }}>
                 <Th>Siparis No</Th>
@@ -258,7 +258,7 @@ function OrderDetailModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.7)" }}>
       <div
-        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl border p-6"
+        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl border p-4 sm:p-6 mx-3 sm:mx-0"
         style={{ background: "#1A1D27", borderColor: "#2A2D37" }}
       >
         <div className="flex items-center justify-between mb-6">
@@ -269,7 +269,7 @@ function OrderDetailModal({
         </div>
 
         {/* Customer info */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
           <InfoBlock label="Musteri" value={order.customer_name} />
           <InfoBlock label="E-posta" value={order.customer_email} />
           <InfoBlock label="Telefon" value={order.customer_phone || "-"} />
@@ -326,7 +326,7 @@ function OrderDetailModal({
         </div>
 
         {/* Status controls */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
           <label className="block">
             <span className="text-xs mb-1 block" style={{ color: "#9CA3AF" }}>Siparis Durumu</span>
             <select

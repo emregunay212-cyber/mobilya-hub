@@ -41,6 +41,7 @@ function getNavForRole(role: string) {
 export default function AdminShell({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<{ email: string; role: string; full_name?: string; store_id?: string; store_name?: string } | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (!token || !user) {
     return <LoginScreen onLogin={(t, u) => { setToken(t); setUser(u); }} />;
@@ -51,26 +52,54 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={{ token, user, logout }}>
       <div className="flex h-screen" style={{ background: "#0F1117", color: "#E5E7EB" }}>
-        {/* Sidebar */}
-        <Sidebar user={user} onLogout={logout} />
+        {/* Desktop Sidebar */}
+        <div className="hidden md:flex">
+          <Sidebar user={user} onLogout={logout} />
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {mobileMenuOpen && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/60 z-50 md:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <div className="fixed left-0 top-0 bottom-0 z-50 md:hidden">
+              <Sidebar user={user} onLogout={logout} onNavigate={() => setMobileMenuOpen(false)} />
+            </div>
+          </>
+        )}
 
         {/* Main content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden min-w-0">
           {/* Topbar */}
           <header
-            className="h-14 flex items-center justify-between px-6 border-b"
+            className="h-14 flex items-center justify-between px-4 md:px-6 border-b shrink-0"
             style={{ background: "#1A1D27", borderColor: "#2A2D37" }}
           >
-            <h1 className="text-sm font-semibold" style={{ color: "#9CA3AF" }}>
-              WebKoda Admin
-            </h1>
             <div className="flex items-center gap-3">
-              <span className="text-xs" style={{ color: "#9CA3AF" }}>
+              {/* Hamburger - mobile only */}
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="md:hidden p-1.5 rounded-lg"
+                style={{ color: "#9CA3AF" }}
+              >
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+              </button>
+              <h1 className="text-sm font-semibold" style={{ color: "#9CA3AF" }}>
+                <span className="md:hidden" style={{ color: "#6366F1" }}>WebKoda</span>
+                <span className="hidden md:inline">WebKoda Admin</span>
+              </h1>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-[10px] sm:text-xs hidden sm:inline truncate max-w-[180px]" style={{ color: "#9CA3AF" }}>
                 {user.email}
               </span>
               <button
                 onClick={logout}
-                className="text-xs px-3 py-1 rounded"
+                className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1.5 sm:py-1 rounded"
                 style={{ background: "#2A2D37", color: "#EF4444" }}
               >
                 Cikis
@@ -79,7 +108,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           </header>
 
           {/* Page */}
-          <main className="flex-1 overflow-y-auto p-6">{children}</main>
+          <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6">{children}</main>
         </div>
       </div>
     </AuthContext.Provider>
@@ -90,20 +119,22 @@ export default function AdminShell({ children }: { children: ReactNode }) {
 function Sidebar({
   user,
   onLogout,
+  onNavigate,
 }: {
   user: { email: string; role: string; full_name?: string; store_name?: string };
   onLogout: () => void;
+  onNavigate?: () => void;
 }) {
   const pathname = usePathname();
   const navItems = getNavForRole(user.role);
 
   return (
     <aside
-      className="w-60 flex flex-col border-r"
+      className="w-60 flex flex-col border-r h-full"
       style={{ background: "#1A1D27", borderColor: "#2A2D37" }}
     >
       {/* Logo */}
-      <div className="h-14 flex items-center px-5 border-b" style={{ borderColor: "#2A2D37" }}>
+      <div className="h-14 flex items-center justify-between px-5 border-b shrink-0" style={{ borderColor: "#2A2D37" }}>
         <div>
           <span className="text-lg font-bold" style={{ color: "#6366F1" }}>
             WebKoda
@@ -114,17 +145,26 @@ function Sidebar({
             </p>
           )}
         </div>
+        {/* Close button - mobile only */}
+        {onNavigate && (
+          <button onClick={onNavigate} className="md:hidden p-1" style={{ color: "#9CA3AF" }}>
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 space-y-1 px-3">
+      <nav className="flex-1 py-3 space-y-0.5 px-3 overflow-y-auto">
         {navItems.map((item) => {
           const active = pathname === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors"
+              onClick={onNavigate}
+              className="flex items-center gap-3 px-3 py-2.5 md:py-2 rounded-lg text-sm transition-colors"
               style={{
                 background: active ? "#6366F1" : "transparent",
                 color: active ? "#fff" : "#9CA3AF",
@@ -138,7 +178,7 @@ function Sidebar({
       </nav>
 
       {/* User info at bottom */}
-      <div className="p-4 border-t" style={{ borderColor: "#2A2D37" }}>
+      <div className="p-4 border-t shrink-0" style={{ borderColor: "#2A2D37" }}>
         <p className="text-xs truncate" style={{ color: "#9CA3AF" }}>
           {user.full_name || user.email}
         </p>
@@ -192,7 +232,7 @@ function LoginScreen({
     >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm p-8 rounded-xl border"
+        className="w-full max-w-sm mx-4 p-6 sm:p-8 rounded-xl border"
         style={{ background: "#1A1D27", borderColor: "#2A2D37" }}
       >
         <h2 className="text-xl font-bold mb-6 text-center" style={{ color: "#6366F1" }}>

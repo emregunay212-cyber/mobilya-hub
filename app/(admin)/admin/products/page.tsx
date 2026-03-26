@@ -180,8 +180,8 @@ export default function ProductsPage() {
           </p>
         </div>
       ) : (
-        <div className="rounded-xl border overflow-hidden" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
-          <table className="w-full text-sm">
+        <div className="rounded-xl border overflow-x-auto" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr style={{ borderBottom: "1px solid #2A2D37" }}>
                 <Th>Gorsel</Th>
@@ -368,10 +368,10 @@ function ProductFormModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.7)" }}>
       <div
-        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl border p-6"
+        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl border p-4 sm:p-6 mx-3 sm:mx-0"
         style={{ background: "#1A1D27", borderColor: "#2A2D37" }}
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <h2 className="text-lg font-bold" style={{ color: "#E5E7EB" }}>
             {product ? "Urun Duzenle" : "Yeni Urun"}
           </h2>
@@ -385,7 +385,7 @@ function ProductFormModal({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Field label="Urun Adi">
               <input
                 value={form.name}
@@ -416,7 +416,7 @@ function ProductFormModal({
             />
           </Field>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <Field label="Fiyat (TL)">
               <input
                 type="number"
@@ -451,7 +451,7 @@ function ProductFormModal({
             </Field>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <Field label="Kategori">
               <select
                 value={form.category_id}

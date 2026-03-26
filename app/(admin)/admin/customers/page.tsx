@@ -70,8 +70,8 @@ export default function CustomersPage() {
           </p>
         </div>
       ) : (
-        <div className="rounded-xl border overflow-hidden" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
-          <table className="w-full text-sm">
+        <div className="rounded-xl border overflow-x-auto" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr style={{ borderBottom: "1px solid #2A2D37" }}>
                 <Th>Musteri</Th><Th>Telefon</Th><Th>Siparis</Th><Th>Toplam Harcama</Th><Th>Son Siparis</Th>

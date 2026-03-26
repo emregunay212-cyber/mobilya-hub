@@ -93,8 +93,8 @@ export default function CouponsPage() {
           <p className="text-sm" style={{ color: "#9CA3AF" }}>Henuz kupon yok.</p>
         </div>
       ) : (
-        <div className="rounded-xl border overflow-hidden" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
-          <table className="w-full text-sm">
+        <div className="rounded-xl border overflow-x-auto" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
+          <table className="w-full text-sm min-w-[800px]">
             <thead>
               <tr style={{ borderBottom: "1px solid #2A2D37" }}>
                 <Th>Kod</Th><Th>Tip</Th><Th>Deger</Th><Th>Min Tutar</Th><Th>Kullanim</Th><Th>Son Tarih</Th><Th>Durum</Th><Th>Islem</Th>
