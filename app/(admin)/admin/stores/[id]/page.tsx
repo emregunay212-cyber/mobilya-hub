@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/components/admin/AdminShell";
 import { useParams, useRouter } from "next/navigation";
 import DomainSetup from "@/components/admin/DomainSetup";
+import ThemePreview from "@/components/admin/StoreWizard/ThemePreview";
+import { THEMES, getThemesBySector } from "@/lib/themes";
 
 interface TrustItem {
   icon: string;
@@ -230,6 +232,16 @@ export default function StoreEditPage() {
           </button>
         </div>
       </div>
+
+      {/* Theme Selector */}
+      <ThemeSelector
+        currentTheme={(store.settings as Record<string, unknown>)?.theme as string || "classic-warm"}
+        sector={(store.settings as Record<string, unknown>)?.sector as string || "mobilyaci"}
+        onSelect={(themeId) => {
+          const settings = { ...((store.settings as Record<string, unknown>) || {}), theme: themeId };
+          setStore({ ...store, settings });
+        }}
+      />
 
       {/* Trust Bar Editor */}
       <TrustBarEditor
@@ -548,6 +560,88 @@ function TrustBarEditor({ items, onChange }: { items: TrustItem[]; onChange: (it
           Henuz oge eklenmedi. Sektor varsayilani kullanilacak.
         </p>
       )}
+    </div>
+  );
+}
+
+function ThemeSelector({
+  currentTheme,
+  sector,
+  onSelect,
+}: {
+  currentTheme: string;
+  sector: string;
+  onSelect: (themeId: string) => void;
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const sectorThemes = getThemesBySector(sector);
+  const allThemes = THEMES;
+  const themes = showAll ? allThemes : sectorThemes;
+
+  return (
+    <div className="mt-6 rounded-xl border p-6" style={{ background: "#1A1D27", borderColor: "#2A2D37" }}>
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="text-sm font-semibold" style={{ color: "#E5E7EB" }}>
+          Tema Secimi
+        </h3>
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="text-xs px-2 py-1 rounded"
+          style={{ background: "#2A2D37", color: "#9CA3AF" }}
+        >
+          {showAll ? "Sektor temalari" : "Tum temalar"}
+        </button>
+      </div>
+      <p className="text-xs mb-4" style={{ color: "#9CA3AF" }}>
+        Mevcut: {THEMES.find((t) => t.id === currentTheme)?.name || currentTheme}
+      </p>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Theme list */}
+        <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2">
+          {themes.map((theme) => (
+            <button
+              key={theme.id}
+              onClick={() => onSelect(theme.id)}
+              className="w-full text-left p-3 rounded-lg border transition-all"
+              style={{
+                background: currentTheme === theme.id ? "#6366F115" : "#0F1117",
+                borderColor: currentTheme === theme.id ? "#6366F1" : "#2A2D37",
+              }}
+            >
+              <div className="flex items-center gap-3">
+                {/* Color swatches */}
+                <div className="flex gap-1 flex-shrink-0">
+                  {theme.colors.slice(0, 4).map((c, i) => (
+                    <div
+                      key={i}
+                      className="w-4 h-4 rounded-full border"
+                      style={{ background: c, borderColor: "#2A2D37" }}
+                    />
+                  ))}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-medium truncate" style={{ color: "#E5E7EB" }}>
+                    {theme.name}
+                    {currentTheme === theme.id && (
+                      <span className="ml-2 text-[10px]" style={{ color: "#6366F1" }}>● Aktif</span>
+                    )}
+                  </p>
+                  <p className="text-[10px] truncate" style={{ color: "#9CA3AF" }}>
+                    {theme.desc}
+                  </p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Live preview */}
+        <div className="sticky top-0">
+          <p className="text-xs mb-2 font-medium" style={{ color: "#9CA3AF" }}>Canli Onizleme</p>
+          <ThemePreview themeId={currentTheme} sectorId={sector} />
+        </div>
+      </div>
     </div>
   );
 }
