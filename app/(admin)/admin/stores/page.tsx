@@ -107,13 +107,13 @@ export default function StoresPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: "#E5E7EB" }}>
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold" style={{ color: "#E5E7EB" }}>
           Magazalar
         </h1>
         <Link
           href="/admin/stores/new"
-          className="px-4 py-2 rounded-lg text-sm font-medium text-white"
+          className="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-white"
           style={{ background: "#6366F1" }}
         >
           + Yeni Magaza
@@ -133,8 +133,9 @@ export default function StoresPage() {
           </Link>
         </div>
       ) : (
+        {/* Desktop Table */}
         <div
-          className="rounded-xl border overflow-hidden"
+          className="hidden md:block rounded-xl border overflow-hidden"
           style={{ background: "#1A1D27", borderColor: "#2A2D37" }}
         >
           <table className="w-full text-sm">
@@ -153,73 +154,27 @@ export default function StoresPage() {
               {stores.map((store) => (
                 <tr key={store.id} style={{ borderBottom: "1px solid #2A2D37" }}>
                   <td className="px-4 py-3">
-                    <p className="font-medium" style={{ color: "#E5E7EB" }}>
-                      {store.name}
-                    </p>
-                    <p className="text-xs" style={{ color: "#9CA3AF" }}>
-                      /{store.slug}
-                    </p>
+                    <p className="font-medium" style={{ color: "#E5E7EB" }}>{store.name}</p>
+                    <p className="text-xs" style={{ color: "#9CA3AF" }}>/{store.slug}</p>
                   </td>
-                  <td className="px-4 py-3" style={{ color: "#9CA3AF" }}>
-                    {store.settings?.sector || "-"}
-                  </td>
-                  <td className="px-4 py-3" style={{ color: "#9CA3AF" }}>
-                    {store.city || "-"}
-                  </td>
+                  <td className="px-4 py-3" style={{ color: "#9CA3AF" }}>{store.settings?.sector || "-"}</td>
+                  <td className="px-4 py-3" style={{ color: "#9CA3AF" }}>{store.city || "-"}</td>
                   <td className="px-4 py-3">
-                    <span
-                      className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-full"
-                      style={{
-                        background: store.is_active
-                          ? "rgba(16,185,129,0.1)"
-                          : "rgba(239,68,68,0.1)",
-                        color: store.is_active ? "#10B981" : "#EF4444",
-                      }}
-                    >
-                      <span
-                        className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: store.is_active ? "#10B981" : "#EF4444" }}
-                      />
-                      {store.is_active ? "Aktif" : "Pasif"}
-                    </span>
+                    <StatusBadge active={store.is_active} />
                   </td>
                   <td className="px-4 py-3">
                     {store.deployment_url ? (
-                      <span className="text-xs" style={{ color: "#10B981" }}>
-                        Yayinda
-                      </span>
+                      <span className="text-xs" style={{ color: "#10B981" }}>Yayinda</span>
                     ) : (
-                      <span className="text-xs" style={{ color: "#9CA3AF" }}>
-                        -
-                      </span>
+                      <span className="text-xs" style={{ color: "#9CA3AF" }}>-</span>
                     )}
                   </td>
-                  <td className="px-4 py-3" style={{ color: "#9CA3AF" }}>
-                    {store._productCount ?? 0}
-                  </td>
+                  <td className="px-4 py-3" style={{ color: "#9CA3AF" }}>{store._productCount ?? 0}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <Link
-                        href={`/admin/stores/${store.id}`}
-                        className="text-xs px-2.5 py-1 rounded"
-                        style={{ background: "#2A2D37", color: "#6366F1" }}
-                      >
-                        Duzenle
-                      </Link>
-                      <button
-                        onClick={() => handleRedeploy(store.id)}
-                        className="text-xs px-2.5 py-1 rounded"
-                        style={{ background: "#2A2D37", color: "#10B981" }}
-                      >
-                        Deploy
-                      </button>
-                      <button
-                        onClick={() => handleDelete(store.id)}
-                        className="text-xs px-2.5 py-1 rounded"
-                        style={{ background: "#2A2D37", color: "#EF4444" }}
-                      >
-                        Sil
-                      </button>
+                      <Link href={`/admin/stores/${store.id}`} className="text-xs px-2.5 py-1 rounded" style={{ background: "#2A2D37", color: "#6366F1" }}>Duzenle</Link>
+                      <button onClick={() => handleRedeploy(store.id)} className="text-xs px-2.5 py-1 rounded" style={{ background: "#2A2D37", color: "#10B981" }}>Deploy</button>
+                      <button onClick={() => handleDelete(store.id)} className="text-xs px-2.5 py-1 rounded" style={{ background: "#2A2D37", color: "#EF4444" }}>Sil</button>
                     </div>
                   </td>
                 </tr>
@@ -227,8 +182,52 @@ export default function StoresPage() {
             </tbody>
           </table>
         </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden space-y-3">
+          {stores.map((store) => (
+            <div
+              key={store.id}
+              className="rounded-xl border p-4"
+              style={{ background: "#1A1D27", borderColor: "#2A2D37" }}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-sm truncate" style={{ color: "#E5E7EB" }}>{store.name}</p>
+                  <p className="text-[10px]" style={{ color: "#9CA3AF" }}>/{store.slug}</p>
+                </div>
+                <StatusBadge active={store.is_active} />
+              </div>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs mb-3" style={{ color: "#9CA3AF" }}>
+                <span>{store.settings?.sector || "-"}</span>
+                <span>{store.city || "-"}</span>
+                <span>{store._productCount ?? 0} urun</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href={`/admin/stores/${store.id}`} className="flex-1 text-center text-xs px-3 py-2 rounded-lg" style={{ background: "#2A2D37", color: "#6366F1" }}>Duzenle</Link>
+                <button onClick={() => handleRedeploy(store.id)} className="text-xs px-3 py-2 rounded-lg" style={{ background: "#2A2D37", color: "#10B981" }}>Deploy</button>
+                <button onClick={() => handleDelete(store.id)} className="text-xs px-3 py-2 rounded-lg" style={{ background: "#2A2D37", color: "#EF4444" }}>Sil</button>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
+  );
+}
+
+function StatusBadge({ active }: { active: boolean }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded-full"
+      style={{
+        background: active ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+        color: active ? "#10B981" : "#EF4444",
+      }}
+    >
+      <span className="w-1.5 h-1.5 rounded-full" style={{ background: active ? "#10B981" : "#EF4444" }} />
+      {active ? "Aktif" : "Pasif"}
+    </span>
   );
 }
 
